@@ -1,0 +1,81 @@
+---
+title: "Untitled"
+format: dashboard
+---
+
+#  {.sidebar}
+
+Choose the type of input map that you want information on
+
+-   Nature
+    -   MPA
+    -   Biodiversity
+-   Fisheries
+    -   Intensity
+-   Energy
+
+# Input map layers
+
+## Row
+
+### column
+
+```{=html}
+<iframe style="border:none;" height="600" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=143750791,143750761&layers=143750774&layerNames=OSPAR%20MPA%202023%20%28OSPAR%29"></iframe>
+```
+
+### Column
+
+```{=html}
+<iframe style="border:none;" height="600" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/nature.html#marine-biodiversity-and-protected-areas"></iframe>
+```
+
+# Output map layers
+
+##  {height=20%}
+
+```{ojs}
+
+data = FileAttachment("data/palmer-penguins.csv").csv({ typed: true })
+
+viewof bill_length_min = Inputs.range(
+  [32, 50], 
+  {value: 35, step: 1, label: "Bill length (min):"}
+)
+viewof islands = Inputs.checkbox(
+  ["Torgersen", "Biscoe", "Dream"], 
+  {value: ["Torgersen", "Biscoe"], 
+    label: "Islands:"
+  }
+)
+```
+
+## {height=80%}
+
+```{ojs, echo = FALSE}
+
+filtered = data.filter(function(penguin) {
+  return bill_length_min < penguin.bill_length_mm &&
+         islands.includes(penguin.island);
+})
+
+
+Plot.rectY(filtered, 
+  Plot.binX(
+    {y: "count"}, 
+    {x: "body_mass_g", fill: "species", thresholds: 20}
+  ))
+  .plot({
+    height: 600, // Set desired height
+    facet: {
+      data: filtered,
+      x: "sex",
+      y: "species",
+      marginRight: 80
+    },
+    marks: [
+      Plot.frame(),
+    ]
+  }
+)
+```
