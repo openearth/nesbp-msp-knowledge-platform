@@ -4,6 +4,7 @@
 .Ruserdata
 *.Rproj
 *.html
+.github/copilot-instructions.md
 
 /.quarto/
 /msp-dashboard_files/
