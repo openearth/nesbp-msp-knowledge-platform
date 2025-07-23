@@ -3,16 +3,20 @@ title: "Untitled"
 format: dashboard
 ---
 
-#  {.sidebar}
 
-Choose the type of input map that you want information on
+# Input map layers
 
--   Nature
-    -   MPA
-    -   Biodiversity
--   Fisheries
-    -   Intensity
--   Energy
+## Sidebar {.sidebar}
+
+**Input Map Categories**
+
+- Nature
+  - MPA
+  - Biodiversity
+- Fisheries
+  - Intensity
+- Energy
+
 
 # Input map layers
 
@@ -30,7 +34,20 @@ Choose the type of input map that you want information on
 <iframe style="border:none;" height="600" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/nature.html#marine-biodiversity-and-protected-areas"></iframe>
 ```
 
+
 # Output map layers
+
+## Sidebar {.sidebar}
+
+**Output Map Categories**
+
+- Land Use Summary
+  - Table
+  - ECharts Graph
+- Data Visualizations
+  - Penguin Example
+- Reports
+  - Downloadable Data
 
 ## Row
 
