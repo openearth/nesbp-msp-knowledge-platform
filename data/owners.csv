@@ -1,13 +1,13 @@
-name,code
-Belgium,BE
-Denmark,DK
-Germany,DE
-Netherlands,NL
-Norway,NO
-Sweden,SE
-United Kingdom,GB
-OSPAR,ospar
-EMODnet,emodnet
-ICES,ices
-GNSBI,gnsbi
-HELCOM,helcom
+name;code
+Belgium;BE
+Denmark;DK
+Germany;DE
+Netherlands;NL
+Norway;NO
+Sweden;SE
+United Kingdom;GB
+OSPAR;ospar
+EMODnet;emodnet
+ICES;ices
+GNSBI;gnsbi
+HELCOM;helcom
