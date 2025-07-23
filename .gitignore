@@ -2,6 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+*.Rproj
 *.html
 
 /.quarto/
+/msp-dashboard_files/
