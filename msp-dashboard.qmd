@@ -18,15 +18,25 @@ Administrative borders
  - ....
 
 Aquaculture
+
 Fishing areas
+
 Installations and infrastructures
+
 Maritime transport
+
 Nature protection
+
 Military training
+
 Raw material extraction
+
 Scientific research
+
 Cables and pipelines
+
 Tourism and recreation
+
 Underwater cultural heritage
 
 Links to national data portals
@@ -56,11 +66,13 @@ Links to national data portals
     + The Netherlands
     + .....
 
-
-
 :::
 
 # Explanation
+
+## Row
+
+### Column
 
 **Idea**
 
@@ -69,6 +81,14 @@ This is a mock-up of a shared Maritime Spatial Planning (MSP) platform for count
 **Concept**
 
 A list of concepts is constructed based on which both maps as a knowledge base is shown. 
+
+The idea is to show a map linked to the category in the sidebar in this panel.
+
+
+### Column
+
+Here is information related to the map on the left side
+
 
 # Policy makers
 
@@ -96,7 +116,7 @@ A list of concepts is constructed based on which both maps as a knowledge base i
 <!-- ![Shipping routes Dutch continental shelf](images/shipping_NL.jpg) -->
 
 ```{=html}
-<iframe style="border:none;" height="600" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=143750791,143750761&layers=143750774&layerNames=OSPAR%20MPA%202023%20%28OSPAR%29"></iframe>
+<iframe style="border:none;" height="600" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=143436652&layers=eYVZ4NBKSSCuqzqI24djxA&layerNames=Offshore%20Windfarm%20%28EMODNET%29.%20"></iframe>
 ```
 
 ### Column
@@ -105,7 +125,7 @@ A list of concepts is constructed based on which both maps as a knowledge base i
 
 
 ```{=html}
-<iframe style="border:none;" height="600" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/nature.html#marine-biodiversity-and-protected-areas"></iframe>
+<iframe style="border:none;" height="600" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/energy.html#targets-per-country"></iframe>
 ```
 
 
@@ -120,7 +140,7 @@ A list of concepts is constructed based on which both maps as a knowledge base i
 <!-- ![Shipping routes Dutch continental shelf](images/shipping_NL.jpg) -->
 
 ```{=html}
-<iframe style="border:none;" height="600" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=143750791,143750761&layers=143750774&layerNames=OSPAR%20MPA%202023%20%28OSPAR%29"></iframe>
+<iframe style="border:none;" height="600" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=143750791,143750761&layers=143750774,146748301&layerNames=OSPAR%20MPA%202023%20%28OSPAR%29,Black%20Legged%20Kittiwake%20%28January%29"></iframe>
 ```
 
 ### Column
