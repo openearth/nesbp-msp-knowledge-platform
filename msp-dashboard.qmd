@@ -68,7 +68,7 @@ Links to national data portals
 
 :::
 
-# Explanation
+# Introduction
 
 ## Row
 
@@ -94,16 +94,16 @@ Here is information related to the map on the left side
 
 ## Row
 
-### column
+### column 
 
 ```{=html}
-<iframe style="border:none;" height="600" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=143750791,143750761&layers=143750774&layerNames=OSPAR%20MPA%202023%20%28OSPAR%29"></iframe>
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=143750791,143750761&layers=143750774&layerNames=OSPAR%20MPA%202023%20%28OSPAR%29"></iframe>
 ```
 
 ### Column
 
 ```{=html}
-<iframe style="border:none;" height="600" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/nature.html#marine-biodiversity-and-protected-areas"></iframe>
+<iframe style="border:none;" height="800" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/nature.html#marine-biodiversity-and-protected-areas"></iframe>
 ```
 
 
@@ -137,7 +137,7 @@ Here is information related to the map on the left side
 
 ### column
 
-<!-- ![Shipping routes Dutch continental shelf](images/shipping_NL.jpg) -->
+
 
 ```{=html}
 <iframe style="border:none;" height="600" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=143750791,143750761&layers=143750774,146748301&layerNames=OSPAR%20MPA%202023%20%28OSPAR%29,Black%20Legged%20Kittiwake%20%28January%29"></iframe>
@@ -145,9 +145,75 @@ Here is information related to the map on the left side
 
 ### Column
 
-<!-- ![Northern fulmar (Fulmarus glacialis)](images/northern-fulmar.jpg) -->
 
 
 ```{=html}
 <iframe style="border:none;" height="600" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/nature.html#marine-biodiversity-and-protected-areas"></iframe>
 ```
+
+
+```{r}
+#| echo: false
+#| output: asis
+
+
+require(readr)
+user_profile <- read_csv2("data/user_profile.csv", show_col_types = FALSE)
+contentIndex <- read_csv("data/contentIndex.csv", show_col_types = FALSE)
+
+
+cat(paste("#", user_profile[4,"name"], "\n\n"))
+
+cat("The content on this page is generated using R code.\n\n")
+
+cat("## row\n")
+
+cat("### column\n")
+
+cat(
+  paste(
+    '```{=html}\n<iframe style="border:none;" height="800" width="100%" src="', 
+contentIndex$mapLink[1], 
+'"></iframe>\n```\n'
+  )
+)
+
+cat("### column\n")
+
+cat(
+  paste(
+    '```{=html}\n<iframe style="border:none;" height="800" width="100%" src="', 
+contentIndex$documentLink[1], 
+'"></iframe>\n```\n'
+  )
+)
+
+
+
+```
+# ojs playground
+
+below code should dynamically generate columns with content. does not work yet. 
+
+
+```{ojs}
+//| echo: fenced
+
+// Load CSV files
+import { csvParse } from "d3-dsv";
+
+const userProfileText = await FileAttachment("data/user_profile.csv").text();
+const contentIndexText = await FileAttachment("data/contentIndex.csv").text();
+
+const userProfile = csvParse(userProfileText, d3.autoType);
+const contentIndex = csvParse(contentIndexText, d3.autoType);
+
+
+// Extract values
+const userName = userProfile[3]?.name ?? "Unknown";
+const mapLink = contentIndex[0]?.mapLink ?? "";
+const documentLink = contentIndex[0]?.documentLink ?? "";
+
+
+```
+
