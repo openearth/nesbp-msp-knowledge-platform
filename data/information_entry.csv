@@ -1,4 +1,4 @@
-name;code
-input data;input
-knowledge base;knowledge
-msp zoning;zoning
+name;code;explanation
+input data;input;MSP underlying maps used for zoning.
+knowledge base;knowledge;Background knowledge used for national zoning and international coordination of MSP.
+msp zoning;zoning;Outcome of MSP process as zoning areas.
