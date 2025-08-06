@@ -156,13 +156,13 @@ Here is information related to the map on the left side
 #| echo: false
 #| output: asis
 
-
+#install.packages("readr")
 require(readr)
 user_profile <- read_csv2("data/user_profile.csv", show_col_types = FALSE)
 contentIndex <- read_csv("data/contentIndex.csv", show_col_types = FALSE)
 
 
-cat(paste("#", user_profile[4,"name"], "\n\n"))
+cat("#", unlist(user_profile[4,"name"]), "\n\n")
 
 cat("The content on this page is generated using R code.\n\n")
 
@@ -200,19 +200,16 @@ below code should dynamically generate columns with content. does not work yet.
 //| echo: fenced
 
 // Load CSV files
-import { csvParse } from "d3-dsv";
 
-const userProfileText = await FileAttachment("data/user_profile.csv").text();
-const contentIndexText = await FileAttachment("data/contentIndex.csv").text();
+userProfile = FileAttachment("data/user_profile.csv").csv({ typed: true })
+contentIndex = FileAttachment("data/contentIndex.csv").csv({ typed: true })
 
-const userProfile = csvParse(userProfileText, d3.autoType);
-const contentIndex = csvParse(contentIndexText, d3.autoType);
-
+// needed: present links below with columne headers and two returns before each link presentation
 
 // Extract values
-const userName = userProfile[3]?.name ?? "Unknown";
-const mapLink = contentIndex[0]?.mapLink ?? "";
-const documentLink = contentIndex[0]?.documentLink ?? "";
+contentIndex[0]?.mapLink ?? "";
+contentIndex[0]?.documentLink ?? "";
+
 
 
 ```
