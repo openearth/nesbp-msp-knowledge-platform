@@ -1,7 +1,7 @@
 require(tidyverse)
 require(DBI)
 
-update_csv_files <- TRUE
+update_csv_files <- FALSE
 
 
 conditionalWrite <- function(condition = update_csv_files, object, path){
@@ -16,7 +16,10 @@ conditionalWrite <- function(condition = update_csv_files, object, path){
 
 # create in-memory database
 # Should be replaced by file database
-con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+# con <- dbConnect(RSQLite::SQLite(), ":memory:")
+
+con <- dbConnect(RSQLite::SQLite(), "data/gnsbi_platform.db")
 
 # construct lists
 
@@ -137,8 +140,13 @@ conditionalWrite(update_csv_files, main_table, "data/main_table.csv")
 dbWriteTable(con, "main_table", main_table)
 
 
+# close connection (database disappears from memory)
+DBI::dbDisconnect(con)
 
 
+#==== test =======
+
+con <- dbConnect(RSQLite::SQLite(), "data/gnsbi_platform.db")
 
 # list all tables and read one
 dbListTables(con)
@@ -152,7 +160,5 @@ main_table %>%
   left_join(user_profile, by = c(user_profile = "code")) %>%
   collect()
 
-# close connection (database disappears from memory)
+
 DBI::dbDisconnect(con)
-
-
