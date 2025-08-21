@@ -1,8 +1,0 @@
-country.name.en;eurostat;fao;iso.name.en;iso2c;iso3c;country.name.en.regex
-Belgium;BE;255;Belgium;BE;BEL;^(?!.*luxem).*belgium
-Denmark;DK;54;Denmark;DK;DNK;denmark
-Germany;DE;79;Germany;DE;DEU;^(?!.*east).*germany|^(?=.*\bfed.*\brep).*german
-Netherlands;NL;150;Netherlands (the);NL;NLD;^(?!.*\bant)(?!.*\bcarib).*netherlands|holland
-Norway;NO;162;Norway;NO;NOR;norway
-Sweden;SE;210;Sweden;SE;SWE;sweden
-United Kingdom;UK;229;United Kingdom;GB;GBR;united.?kingdom|britain|^u\.?k\.?$
