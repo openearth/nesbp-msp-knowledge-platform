@@ -4,31 +4,7 @@ format: dashboard
 ---
 
 
-
-## Sidebar {.sidebar}
-
-```{ojs}
-// Load the content index CSV
-contentIndex = FileAttachment("data/contentIndex.csv").csv({ typed: true })
-
-// Helper: get unique values for a column
-unique = (arr, key) => Array.from(new Set(arr.map(d => d[key])));
-
-// State: which tab is active? (default to 'MSP input data')
-viewof activeTab = Inputs.radio([
-  "MSP input data",
-  "Knowledge base for decisions"
-], { label: "Select data category:" })
-
-// Filter contentIndex based on tab
-sidebarItems = contentIndex.filter(d =>
-  (activeTab === "MSP input data" && d.information_type === "input data") ||
-  (activeTab === "Knowledge base for decisions" && d.information_type === "knowledge base")
-)
-
-// Render sidebar items
-sidebarItems.map(d => `${d.nature} ([map](${d.mapLink})) ([doc](${d.documentLink}))`).join("\n\n")
-```
+#  {.sidebar}
 
 ::: {.panel-tabset .nav-pills}
 
@@ -114,7 +90,18 @@ The idea is to show a map linked to the category in the sidebar in this panel.
 Here is information related to the map on the left side
 
 
-# Policy makers
+
+
+
+```{ojs async}
+// Load user_entry values from contentIndex.csv asynchronously
+userEntries = (await FileAttachment("data/contentIndex.csv").csv({ typed: true })).map(row => row.user_entry)
+policyMakerLabel = userEntries[1] // row 3, index 1
+mspExpertLabel = userEntries[0]   // row 2, index 0
+```
+
+# {=markdown}
+${policyMakerLabel}
 
 ## Row
 
@@ -131,7 +118,9 @@ Here is information related to the map on the left side
 ```
 
 
-# MSP experts
+
+
+# ${mspExpertLabel}
 
 ## Row
 
