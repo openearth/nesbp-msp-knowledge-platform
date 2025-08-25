@@ -5,12 +5,14 @@ website:
   title: "NESBp"
   navbar:
     left:
-      - text: Input Data
-        href: input_data.qmd
-      - text: Knowledge Base
-        href: knowledge_base.qmd
-      - text: MSP Zoning
-        href: msp_zoning.qmd
+      - text: Explanation
+        href: explanation.qmd
+      - text: Policy Makers
+        href: policy_makers.qmd
+      - text: MSP Experts
+        href: msp_experts.qmd
+      - text: Sectorial Actors
+        href: sectorial_actors.qmd
 
 format:
   html:

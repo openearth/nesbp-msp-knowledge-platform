@@ -1,5 +1,0 @@
----
-title: "Input Data"
----
-
-Info on input data.
