@@ -2,12 +2,15 @@ project:
   type: website
 
 website:
-  title: "msp-nesbp-design"
+  title: "NESBp"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+      - text: Input Data
+        href: input_data.qmd
+      - text: Knowledge Base
+        href: knowledge_base.qmd
+      - text: MSP Zoning
+        href: msp_zoning.qmd
 
 format:
   html:
