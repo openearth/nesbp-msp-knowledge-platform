@@ -1,0 +1,289 @@
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Generate _quarto.yml (navbar + sidebars) and create stub .qmd pages
+from a normalized nodes.csv describing an arbitrary-depth site tree.
+
+USAGE:
+    python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light
+
+OPTIONS:
+    --site-title "NESBp"                  # Title in _quarto.yml
+    --sidebar-style docked                # Optional: add style to every sidebar
+    --sidebar-background light            # Optional: add background to every sidebar
+    --dry-run                             # Print YAML to stdout only
+
+Robust to:
+- UTF-8 BOM in header (Windows/Excel)
+- Comma/semicolon/tab/pipe delimiters (auto-detect)
+- Blank lines
+
+
+"""
+import csv
+import os
+import argparse
+import re
+from collections import defaultdict
+
+def slugify(text):
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9\-_\s]+", "", text)
+    text = re.sub(r"[\s]+", "-", text).strip("-")
+    return text or "page"
+
+def detect_dialect(path):
+    with open(path, "r", encoding="utf-8-sig", newline="") as f:
+        sample = f.read(4096)
+        f.seek(0)
+        try:
+            dialect = csv.Sniffer().sniff(sample, delimiters=",;|\t")
+        except Exception:
+            class _D(csv.Dialect):
+                delimiter=","
+                quotechar='"'
+                doublequote=True
+                skipinitialspace=True
+                lineterminator="\n"
+                quoting=csv.QUOTE_MINIMAL
+            dialect = _D()
+        return dialect
+
+def normalize_row_keys(row):
+    out = {}
+    for k, v in row.items():
+        if k is None:
+            continue
+        nk = k.strip().lstrip("\ufeff").lower()
+        out[nk] = (v or "").strip()
+    return out
+
+def read_nodes(csv_path):
+    nodes = {}
+    children = defaultdict(list)
+    required = {"id","label","kind"}
+
+    dialect = detect_dialect(csv_path)
+    with open(csv_path, "r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f, dialect=dialect)
+        line_no = 1
+        for raw in reader:
+            line_no += 1
+            row = normalize_row_keys(raw)
+            if not any((row.get(k) or "").strip() for k in row):
+                continue
+            missing = [c for c in required if (row.get(c) or "") == ""]
+            if missing:
+                raise ValueError(f"CSV validation error on line {line_no}: missing required column(s) {missing}. Row: {row}")
+            nid = row["id"]
+            if nid in nodes:
+                raise ValueError(f"Duplicate id '{nid}' on line {line_no}")
+            node = {
+                "id": nid,
+                "parent_id": row.get("parent_id",""),
+                "label": row["label"],
+                "slug": row.get("slug") or slugify(row["label"]),
+                "kind": row["kind"],
+                "file_path": row.get("file_path",""),
+                "order": int(row["order"]) if (row.get("order") or "").isdigit() else 999,
+                "description": row.get("description",""),
+                "draft": row.get("draft",""),
+                "search_exclude": row.get("search_exclude",""),
+                "external_url": row.get("external_url",""),
+                "icon": row.get("icon",""),
+            }
+            nodes[node["id"]] = node
+        for n in nodes.values():
+            pid = n["parent_id"]
+            if pid:
+                if pid not in nodes:
+                    raise ValueError(f"parent_id '{pid}' of node '{n['id']}' not found in CSV")
+                children[pid].append(n["id"])
+        for pid in list(children.keys()):
+            children[pid].sort(key=lambda nid: (nodes[nid]["order"], nodes[nid]["label"].lower()))
+    return nodes, children
+
+def find_roots(nodes):
+    return [n for n in nodes.values() if n["parent_id"] == "" and n["kind"] == "navbar"]
+
+def compute_default_file_path(nodes, children, node_id):
+    n = nodes[node_id]
+    if n["kind"] == "external":
+        return ""
+    path_slugs = [n["slug"]]
+    pid = n["parent_id"]
+    while pid:
+        path_slugs.append(nodes[pid]["slug"])
+        pid = nodes[pid]["parent_id"]
+    path_slugs.reverse()
+    if n["kind"] in ("navbar","landing","section"):
+        rel = "/".join(path_slugs + ["index.qmd"])
+    else:
+        rel = "/".join(path_slugs[:-1] + [f"{n['slug']}.qmd"])
+    return rel
+
+def ensure_paths(nodes, children):
+    for nid, n in nodes.items():
+        if not n["slug"]:
+            n["slug"] = slugify(n["label"])
+        if n["kind"] != "external" and not n["file_path"]:
+            n["file_path"] = compute_default_file_path(nodes, children, nid)
+
+def make_dirs_for(path):
+    d = os.path.dirname(path)
+    if d and not os.path.exists(d):
+        os.makedirs(d, exist_ok=True)
+
+def write_stub(page_path, title, is_landing=False, children_links=None, description=""):
+    if os.path.exists(page_path):
+        return
+    make_dirs_for(page_path)
+    front_matter = [
+        "---",
+        f'title: "{title}"',
+    ]
+    if description:
+        front_matter.append(f'description: "{description}"')
+    front_matter.append("---")
+    fm = "\n".join(front_matter) + "\n\n"
+    body = ""
+    if is_landing and children_links:
+        body += "## Contents\n\n"
+        for text, href in children_links:
+            body += f"- [{text}]({href})\n"
+        body += "\n"
+    else:
+        body += f"Content for **{title}**.\n"
+    with open(page_path, "w", encoding="utf-8") as f:
+        f.write(fm + body)
+
+def build_sidebar_contents(nodes, children, node_id):
+    n = nodes[node_id]
+    lines = []
+    kids = children.get(node_id, [])
+    if n["kind"] in ("landing","section"):
+        lines.append(f'- section: "{n["label"]}"')
+        if n.get("file_path"):
+            lines.append(f'  href: {n["file_path"]}')
+        if kids:
+            lines.append('  contents:')
+            for cid in kids:
+                child = nodes[cid]
+                if child["kind"] in ("landing","section"):
+                    sub = build_sidebar_contents(nodes, children, cid)
+                    lines.extend(["    " + l for l in sub])
+                else:
+                    href = child["external_url"] if child["kind"]=="external" else child["file_path"]
+                    lines.append(f'    - text: "{child["label"]}"')
+                    lines.append(f'      href: {href}')
+    else:
+        href = n["external_url"] if n["kind"]=="external" else n["file_path"]
+        lines.append(f'- text: "{n["label"]}"')
+        lines.append(f'  href: {href}')
+    return lines
+
+def build_yaml(site_title, roots, nodes, children, theme1, theme2, css, toc, sidebar_style, sidebar_background):
+    L = []
+    L.append("project:")
+    L.append("  type: website")
+    L.append("")
+    L.append("website:")
+    L.append(f'  title: "{site_title}"')
+    L.append("  navbar:")
+    L.append("    left:")
+    for root in roots:
+        L.append(f'      - text: "{root["label"]}"')
+        if root.get("file_path"):
+            L.append(f'        href: {root["file_path"]}')
+    L.append("")
+    L.append("  sidebar:")
+    for root in roots:
+        L.append(f'    - title: "{root["label"]}"')
+        if sidebar_style:
+            L.append(f'      style: "{sidebar_style}"')
+        if sidebar_background:
+            L.append(f'      background: {sidebar_background}')
+        L.append("      contents:")
+        if root.get("file_path"):
+            L.append(f'        - text: "{root["label"]}"')
+            L.append(f'          href: {root["file_path"]}')
+        for cid in children.get(root["id"], []):
+            c = nodes[cid]
+            if c["kind"] in ("landing","section"):
+                sub = build_sidebar_contents(nodes, children, cid)
+                L.extend(["        " + l for l in sub])
+            elif c["kind"] in ("item","external"):
+                href = c["external_url"] if c["kind"]=="external" else c["file_path"]
+                L.append(f'        - text: "{c["label"]}"')
+                L.append(f'          href: {href}')
+        L.append("")
+    L.append("")
+    L.append("format:")
+    L.append("  html:")
+    L.append("    theme:")
+    L.append(f"      - {theme1}")
+    L.append(f"      - {theme2}")
+    L.append(f"    css: {css}")
+    L.append(f"    toc: {'true' if toc else 'false'}")
+    L.append("")
+    return "\n".join(L).rstrip() + "\n"
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("csv", nargs="?", default="nodes.csv", help="Path to nodes.csv")
+    ap.add_argument("--site-title", default="NESBp")
+    ap.add_argument("--yml-out", default="_quarto.yml")
+    ap.add_argument("--create-stubs", action="store_true")
+    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--sidebar-style", default=None)
+    ap.add_argument("--sidebar-background", default=None)
+    ap.add_argument("--theme1", default="cosmo")
+    ap.add_argument("--theme2", default="brand")
+    ap.add_argument("--css", default="styles.css")
+    ap.add_argument("--no-toc", action="store_true")
+    args = ap.parse_args()
+
+    nodes, children = read_nodes(args.csv)
+    roots = [*sorted([n for n in nodes.values() if n["parent_id"]=="" and n["kind"]=="navbar"],
+                     key=lambda n: (n["order"], n["label"].lower()))]
+    if not roots:
+        raise SystemExit("No root navbar nodes found (kind=navbar & empty parent_id).")
+
+    ensure_paths(nodes, children)
+
+    yaml_text = build_yaml(
+        site_title=args.site_title,
+        roots=roots, nodes=nodes, children=children,
+        theme1=args.theme1, theme2=args.theme2, css=args.css,
+        toc=not args.no_toc,
+        sidebar_style=args.sidebar_style,
+        sidebar_background=args.sidebar_background
+    )
+
+    if args.dry_run:
+        print(yaml_text)
+    else:
+        with open(args.yml_out, "w", encoding="utf-8") as f:
+            f.write(yaml_text)
+        print(f"Wrote {args.yml_out}")
+
+    if args.create_stubs:
+        for n in nodes.values():
+            if n["kind"] == "external":
+                continue
+            fp = n.get("file_path")
+            if not fp:
+                continue
+            is_landing = n["kind"] in ("landing","section")
+            children_links = None
+            if is_landing and n["id"] in children:
+                children_links = []
+                for cid in children[n["id"]]:
+                    child = nodes[cid]
+                    href = child["external_url"] if child["kind"]=="external" else child["file_path"]
+                    children_links.append((child["label"], href))
+            write_stub(fp, n["label"], is_landing=is_landing, children_links=children_links, description=n.get("description",""))
+
+if __name__ == "__main__":
+    main()

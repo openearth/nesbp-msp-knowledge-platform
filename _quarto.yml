@@ -5,11 +5,11 @@ website:
   title: "NESBp"
   navbar:
     left:
-      - text: Policy Makers
+      - text: "Policy Makers"
         href: policy_makers.qmd
-      - text: MSP Experts
+      - text: "MSP Experts"
         href: msp_experts.qmd
-      - text: Sectorial Actors
+      - text: "Sectorial Actors"
         href: sectorial_actors.qmd
 
   sidebar:
@@ -18,6 +18,8 @@ website:
       background: light
       contents:
         - text: "Policy Makers"
+          href: policy_makers.qmd
+        - section: "Policy Makers"
           href: policy_makers.qmd
         - section: "MSP Input Data"
           href: policy_makers_msp_input.qmd
@@ -32,8 +34,12 @@ website:
           href: policy_makers_msp_zoning.qmd
 
     - title: "MSP Experts"
+      style: "docked"
+      background: light
       contents:
         - text: "MSP Experts"
+          href: msp_experts.qmd
+        - section: "MSP Experts"
           href: msp_experts.qmd
         - text: "MSP Input Data"
           href: msp_experts_msp_input.qmd
@@ -43,8 +49,12 @@ website:
           href: msp_experts_msp_zoning.qmd
 
     - title: "Sectorial Actors"
+      style: "docked"
+      background: light
       contents:
         - text: "Sectorial Actors"
+          href: sectorial_actors.qmd
+        - section: "Sectorial Actors"
           href: sectorial_actors.qmd
         - text: "MSP Input Data"
           href: sectorial_actors_msp_input.qmd
@@ -54,8 +64,6 @@ website:
           href: sectorial_actors_msp_zoning.qmd
 
 
-
-
 format:
   html:
     theme:
@@ -63,6 +71,3 @@ format:
       - brand
     css: styles.css
     toc: true
-
-
-
