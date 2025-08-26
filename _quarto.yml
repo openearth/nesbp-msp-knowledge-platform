@@ -21,34 +21,39 @@ website:
       contents:
         - text: "Policy Makers"
           href: policy_makers.qmd
-        - text: "Policy Makers 1"
-          href: policy_makers_1.qmd
-        - text: "Policy Makers 2"
-          href: policy_makers_2.qmd
-        - text: "Policy Makers 3"
-          href: policy_makers_3.qmd
-        - text: "Policy Makers 4"
-          href: policy_makers_4.qmd
+        - section: "MSP Input Data"
+          href: policy_makers_msp_input.qmd
+          contents:
+            - text: "Administrative Borders"
+              href: policy_makers_administrative_borders.qmd
+            - text: "Aquaculture"
+              href: policy_makers_aquaculture.qmd
+        - text: "Knowledge Base for Decisions"
+          href: policy_makers_knowledge_base.qmd
+        - text: "MSP Zoning"
+          href: policy_makers_msp_zoning.qmd
 
     - title: "MSP Experts"
       contents:
         - text: "MSP Experts"
           href: msp_experts.qmd
-        - text: "MSP Experts 1"
-          href: msp_experts_1.qmd
-        - text: "MSP Experts 2"
-          href: msp_experts_2.qmd
-        - text: "MSP Experts 3"
-          href: msp_experts_3.qmd
+        - text: "MSP Input Data"
+          href: msp_experts_msp_input.qmd
+        - text: "Knowledge Base for Decisions"
+          href: msp_experts_knowledge_base.qmd
+        - text: "MSP Zoning"
+          href: msp_experts_msp_zoning.qmd
 
     - title: "Sectorial Actors"
       contents:
         - text: "Sectorial Actors"
           href: sectorial_actors.qmd
-        - text: "Sectorial Actors 1"
-          href: sectorial_actors_1.qmd
-        - text: "Sectorial Actors 2"
-          href: sectorial_actors_2.qmd
+        - text: "MSP Input Data"
+          href: sectorial_actors_msp_input.qmd
+        - text: "Knowledge Base for Decisions"
+          href: sectorial_actors_knowledge_base.qmd
+        - text: "MSP Zoning"
+          href: sectorial_actors_msp_zoning.qmd
 
 
 
