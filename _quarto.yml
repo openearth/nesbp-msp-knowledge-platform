@@ -5,8 +5,6 @@ website:
   title: "NESBp"
   navbar:
     left:
-      - text: Explanation
-        href: explanation.qmd
       - text: Policy Makers
         href: policy_makers.qmd
       - text: MSP Experts
