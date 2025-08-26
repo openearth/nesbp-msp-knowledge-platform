@@ -13,6 +13,7 @@ OPTIONS:
     --sidebar-style docked                # Optional: add style to every sidebar
     --sidebar-background light            # Optional: add background to every sidebar
     --dry-run                             # Print YAML to stdout only
+    --validate                            # flag prints a tree view with resolved landing modes and warnings (no files written)     python generate_quarto_nav.py nodes.csv --validate
 
 Robust to:
 - UTF-8 BOM in header (Windows/Excel)
@@ -169,8 +170,9 @@ def write_stub(page_path, title, is_landing=False, children_links=None, descript
 def landing_render_mode(node, has_children):
     mode = (node.get("sidebar_as") or "").lower()
     if mode in ("text","section"):
-        return mode
-    return "section" if has_children else "text"
+        return mode, ("explicit")
+    # auto
+    return ("section" if has_children else "text"), ("auto")
 
 def build_sidebar_contents(nodes, children, node_id):
     n = nodes[node_id]
@@ -178,7 +180,7 @@ def build_sidebar_contents(nodes, children, node_id):
     kids = children.get(node_id, [])
     if n["kind"] in ("landing","section"):
         if n["kind"] == "landing":
-            mode = landing_render_mode(n, has_children=bool(kids))
+            mode, _ = landing_render_mode(n, has_children=bool(kids))
         else:
             mode = "section"
         if mode == "section":
@@ -196,7 +198,7 @@ def build_sidebar_contents(nodes, children, node_id):
                         href = child["external_url"] if child["kind"]=="external" else child["file_path"]
                         lines.append(f'    - text: "{child["label"]}"')
                         lines.append(f'      href: {href}')
-        else:
+        else:  # text
             href = n["external_url"] if n["kind"]=="external" else n["file_path"]
             lines.append(f'- text: "{n["label"]}"')
             lines.append(f'  href: {href}')
@@ -232,6 +234,7 @@ def build_yaml(site_title, roots, nodes, children, theme1, theme2, css, toc, sid
         root_children = children.get(root["id"], [])
         has_explicit_landing_child = any(nodes[cid]["kind"] == "landing" for cid in root_children)
 
+        # Only insert the default root link if there is NO explicit landing node.
         if root.get("file_path") and not has_explicit_landing_child:
             L.append(f'        - text: "{root["label"]}"')
             L.append(f'          href: {root["file_path"]}')
@@ -257,6 +260,46 @@ def build_yaml(site_title, roots, nodes, children, theme1, theme2, css, toc, sid
     L.append("")
     return "\n".join(L).rstrip() + "\n"
 
+def validate_tree(nodes, children):
+    roots = [n for n in nodes.values() if n["parent_id"]=="" and n["kind"]=="navbar"]
+    roots.sort(key=lambda n: (n["order"], n["label"].lower()))
+    warnings = []
+
+    def node_line(n):
+        basic = f'{n["label"]} [{n["kind"]}]'
+        if n["kind"] == "landing":
+            mode, origin = landing_render_mode(n, has_children=bool(children.get(n["id"])))
+            extra = f' (sidebar_as={n.get("sidebar_as") or "auto"} -> {mode})'
+            return basic + extra
+        return basic
+
+    # warn: landing as text with children (children would not be shown beneath it)
+    for n in nodes.values():
+        if n["kind"] == "landing":
+            has_kids = bool(children.get(n["id"]))
+            mode, origin = landing_render_mode(n, has_children=has_kids)
+            if mode == "text" and has_kids:
+                warnings.append(f"Landing '{n['label']}' (id={n['id']}) set to 'text' but has children; children won't appear nested under it.")
+
+    # print tree
+    def walk(nid, depth=0):
+        n = nodes[nid]
+        indent = "  " * depth
+        print(f"{indent}- {node_line(n)}")
+        for cid in children.get(nid, []):
+            walk(cid, depth+1)
+
+    print("=== Navigation tree ===")
+    for r in roots:
+        walk(r["id"], 0)
+
+    if warnings:
+        print("\n=== Warnings ===")
+        for w in warnings:
+            print(f"- {w}")
+    else:
+        print("\nNo warnings.")
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("csv", nargs="?", default="nodes.csv", help="Path to nodes.csv")
@@ -264,6 +307,7 @@ def main():
     ap.add_argument("--yml-out", default="_quarto.yml")
     ap.add_argument("--create-stubs", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--validate", action="store_true", help="Print a tree + warnings; do not write files")
     ap.add_argument("--sidebar-style", default=None)
     ap.add_argument("--sidebar-background", default=None)
     ap.add_argument("--theme1", default="cosmo")
@@ -279,6 +323,10 @@ def main():
         raise SystemExit("No root navbar nodes found (kind=navbar & empty parent_id).")
 
     ensure_paths(nodes, children)
+
+    if args.validate:
+        validate_tree(nodes, children)
+        return
 
     yaml_text = build_yaml(
         site_title=args.site_title,
