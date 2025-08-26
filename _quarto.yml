@@ -19,8 +19,6 @@ website:
       contents:
         - text: "Policy Makers"
           href: policy_makers.qmd
-        - section: "Policy Makers"
-          href: policy_makers.qmd
         - section: "MSP Input Data"
           href: policy_makers_msp_input.qmd
           contents:
@@ -39,8 +37,6 @@ website:
       contents:
         - text: "MSP Experts"
           href: msp_experts.qmd
-        - section: "MSP Experts"
-          href: msp_experts.qmd
         - text: "MSP Input Data"
           href: msp_experts_msp_input.qmd
         - text: "Knowledge Base for Decisions"
@@ -53,8 +49,6 @@ website:
       background: light
       contents:
         - text: "Sectorial Actors"
-          href: sectorial_actors.qmd
-        - section: "Sectorial Actors"
           href: sectorial_actors.qmd
         - text: "MSP Input Data"
           href: sectorial_actors_msp_input.qmd

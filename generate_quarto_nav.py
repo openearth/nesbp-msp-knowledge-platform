@@ -19,6 +19,13 @@ Robust to:
 - Comma/semicolon/tab/pipe delimiters (auto-detect)
 - Blank lines
 
+Enhancement:
+- Control how 'landing' nodes appear in the sidebar:
+  CSV column `sidebar_as` with values:
+    - "text"    -> render landing as a simple text/href entry
+    - "section" -> render landing as a section: "<label>" with nested contents
+    - "" (auto) -> if landing has children, render as section; else as text
+
 
 """
 import csv
@@ -84,7 +91,7 @@ def read_nodes(csv_path):
                 "parent_id": row.get("parent_id",""),
                 "label": row["label"],
                 "slug": row.get("slug") or slugify(row["label"]),
-                "kind": row["kind"],
+                "kind": row["kind"],  # navbar | landing | section | item | external
                 "file_path": row.get("file_path",""),
                 "order": int(row["order"]) if (row.get("order") or "").isdigit() else 999,
                 "description": row.get("description",""),
@@ -92,6 +99,7 @@ def read_nodes(csv_path):
                 "search_exclude": row.get("search_exclude",""),
                 "external_url": row.get("external_url",""),
                 "icon": row.get("icon",""),
+                "sidebar_as": row.get("sidebar_as","").lower(),  # "", "text", "section"
             }
             nodes[node["id"]] = node
         for n in nodes.values():
@@ -158,25 +166,40 @@ def write_stub(page_path, title, is_landing=False, children_links=None, descript
     with open(page_path, "w", encoding="utf-8") as f:
         f.write(fm + body)
 
+def landing_render_mode(node, has_children):
+    mode = (node.get("sidebar_as") or "").lower()
+    if mode in ("text","section"):
+        return mode
+    return "section" if has_children else "text"
+
 def build_sidebar_contents(nodes, children, node_id):
     n = nodes[node_id]
     lines = []
     kids = children.get(node_id, [])
     if n["kind"] in ("landing","section"):
-        lines.append(f'- section: "{n["label"]}"')
-        if n.get("file_path"):
-            lines.append(f'  href: {n["file_path"]}')
-        if kids:
-            lines.append('  contents:')
-            for cid in kids:
-                child = nodes[cid]
-                if child["kind"] in ("landing","section"):
-                    sub = build_sidebar_contents(nodes, children, cid)
-                    lines.extend(["    " + l for l in sub])
-                else:
-                    href = child["external_url"] if child["kind"]=="external" else child["file_path"]
-                    lines.append(f'    - text: "{child["label"]}"')
-                    lines.append(f'      href: {href}')
+        if n["kind"] == "landing":
+            mode = landing_render_mode(n, has_children=bool(kids))
+        else:
+            mode = "section"
+        if mode == "section":
+            lines.append(f'- section: "{n["label"]}"')
+            if n.get("file_path"):
+                lines.append(f'  href: {n["file_path"]}')
+            if kids:
+                lines.append('  contents:')
+                for cid in kids:
+                    child = nodes[cid]
+                    if child["kind"] in ("landing","section"):
+                        sub = build_sidebar_contents(nodes, children, cid)
+                        lines.extend(["    " + l for l in sub])
+                    else:
+                        href = child["external_url"] if child["kind"]=="external" else child["file_path"]
+                        lines.append(f'    - text: "{child["label"]}"')
+                        lines.append(f'      href: {href}')
+        else:
+            href = n["external_url"] if n["kind"]=="external" else n["file_path"]
+            lines.append(f'- text: "{n["label"]}"')
+            lines.append(f'  href: {href}')
     else:
         href = n["external_url"] if n["kind"]=="external" else n["file_path"]
         lines.append(f'- text: "{n["label"]}"')
@@ -205,10 +228,15 @@ def build_yaml(site_title, roots, nodes, children, theme1, theme2, css, toc, sid
         if sidebar_background:
             L.append(f'      background: {sidebar_background}')
         L.append("      contents:")
-        if root.get("file_path"):
+
+        root_children = children.get(root["id"], [])
+        has_explicit_landing_child = any(nodes[cid]["kind"] == "landing" for cid in root_children)
+
+        if root.get("file_path") and not has_explicit_landing_child:
             L.append(f'        - text: "{root["label"]}"')
             L.append(f'          href: {root["file_path"]}')
-        for cid in children.get(root["id"], []):
+
+        for cid in root_children:
             c = nodes[cid]
             if c["kind"] in ("landing","section"):
                 sub = build_sidebar_contents(nodes, children, cid)
