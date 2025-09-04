@@ -1,5 +1,5 @@
 ---
-title: "Sectorial Actors 3 - MSP Zoning"
+title: "Sectorial Actors - MSP Zoning"
 ---
 
 Info on sectorial actors MSP zoning.

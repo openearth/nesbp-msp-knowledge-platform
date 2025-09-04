@@ -1,4 +1,8 @@
 project:
+  pre-render:
+    - "python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light"
+  resources:
+    - nodes.csv
   type: website
 
 website:

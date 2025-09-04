@@ -211,6 +211,10 @@ def build_sidebar_contents(nodes, children, node_id):
 def build_yaml(site_title, roots, nodes, children, theme1, theme2, css, toc, sidebar_style, sidebar_background):
     L = []
     L.append("project:")
+    L.append("  pre-render:")
+    L.append('    - "python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light"')
+    L.append("  resources:")
+    L.append("    - nodes.csv")
     L.append("  type: website")
     L.append("")
     L.append("website:")
@@ -340,9 +344,16 @@ def main():
     if args.dry_run:
         print(yaml_text)
     else:
-        with open(args.yml_out, "w", encoding="utf-8") as f:
-            f.write(yaml_text)
-        print(f"Wrote {args.yml_out}")
+        old = None
+        if os.path.exists(args.yml_out):
+            with open(args.yml_out, "r", encoding="utf-8") as f:
+                old = f.read()
+        if old != yaml_text:
+            with open(args.yml_out, "w", encoding="utf-8") as f:
+                f.write(yaml_text)
+            print(f"Wrote {args.yml_out}")
+        else:
+            print(f"{args.yml_out} unchanged")
 
     if args.create_stubs:
         for n in nodes.values():
