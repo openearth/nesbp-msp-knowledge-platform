@@ -1,0 +1,2 @@
+id,template,layout,grid_sidebar_width,grid_body_width,grid_margin_width,grid_gutter_width,intro_md,iframe_src,iframe_height,iframe_width,iframe_style
+mspx-input,single_iframe,[ [1] ],250px,1500px,0px,1.5rem,Info on MSP experts input.,https://testsysteemrapportage.nl/compendium-greater-north-sea/nature.html#marine-biodiversity-and-protected-areas,800,100%,border:none;

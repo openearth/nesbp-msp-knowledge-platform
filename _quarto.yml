@@ -3,6 +3,7 @@ project:
     - "python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light"
   resources:
     - nodes.csv
+    - page_content.csv
   type: website
 
 website:

@@ -215,6 +215,7 @@ def build_yaml(site_title, roots, nodes, children, theme1, theme2, css, toc, sid
     L.append('    - "python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light"')
     L.append("  resources:")
     L.append("    - nodes.csv")
+    L.append("    - page_content.csv")
     L.append("  type: website")
     L.append("")
     L.append("website:")
@@ -304,9 +305,81 @@ def validate_tree(nodes, children):
     else:
         print("\nNo warnings.")
 
+def read_page_content(csv_path):
+    """Return dict by node id with content config; ignore if file missing."""
+    if not os.path.exists(csv_path):
+        return {}
+    # BOM + delimiter tolerant read
+    dialect = detect_dialect(csv_path)
+    items = {}
+    with open(csv_path, "r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f, dialect=dialect)
+        for raw in reader:
+            row = normalize_row_keys(raw)
+            nid = (row.get("id") or "").strip()
+            if not nid:
+                continue
+            items[nid] = row
+    return items
+
+def file_has_autogen_flag(path):
+    """Return True if front matter contains 'autogen: true'."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            head = f.read(2000)
+        # crude but effective: look for autogen: true in front matter
+        return "autogen: true" in head
+    except Exception:
+        return False
+
+def render_single_iframe(cfg, title):
+    # front matter grid (optional)
+    grid_lines = []
+    if any(cfg.get(k) for k in ("grid_sidebar_width","grid_body_width","grid_margin_width","grid_gutter_width")):
+        grid_lines = [
+            "format:",
+            "  html:",
+            "    grid:",
+            f"      sidebar-width: {cfg.get('grid_sidebar_width','')}".rstrip(),
+            f"      body-width: {cfg.get('grid_body_width','')}".rstrip(),
+            f"      margin-width: {cfg.get('grid_margin_width','')}".rstrip(),
+            f"      gutter-width: {cfg.get('grid_gutter_width','')}".rstrip(),
+        ]
+        # Clean empty trailing lines
+        grid_lines = [ln for ln in grid_lines if not ln.endswith(": ")]
+    fm = ["---", f'title: "{title}"', "autogen: true"]
+    fm += grid_lines
+    fm.append("---")
+    fm_text = "\n".join(fm)
+
+    intro = (cfg.get("intro_md") or "").strip()
+    layout = (cfg.get("layout") or "[ [1] ]").strip()
+    src = cfg.get("iframe_src") or ""
+    height = cfg.get("iframe_height") or "800"
+    width = cfg.get("iframe_width") or "100%"
+    style = cfg.get("iframe_style") or "border:none;"
+
+    body = []
+    if intro:
+        body.append(intro)
+        body.append("")  # blank line
+
+    body.append(f'::: {{layout="{layout}"}}')
+    body.append("")
+    body.append("```{=html}")
+    body.append(f'<iframe style="{style}" height="{height}" width="{width}" src="{src}"></iframe>')
+    body.append("```")
+    body.append("")
+    body.append(":::")
+    body_text = "\n".join(body)
+
+    return fm_text + "\n\n" + body_text + "\n"
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("csv", nargs="?", default="nodes.csv", help="Path to nodes.csv")
+    ap.add_argument("--content-csv", default="page_content.csv",
+                help="Optional CSV to drive page bodies (id-based templates)")
     ap.add_argument("--site-title", default="NESBp")
     ap.add_argument("--yml-out", default="_quarto.yml")
     ap.add_argument("--create-stubs", action="store_true")
@@ -327,6 +400,7 @@ def main():
         raise SystemExit("No root navbar nodes found (kind=navbar & empty parent_id).")
 
     ensure_paths(nodes, children)
+    content_by_id = read_page_content(args.content_csv)
 
     if args.validate:
         validate_tree(nodes, children)
@@ -362,6 +436,22 @@ def main():
             fp = n.get("file_path")
             if not fp:
                 continue
+
+            content_cfg = content_by_id.get(n["id"])
+            if content_cfg and (content_cfg.get("template") == "single_iframe"):
+                # We control this page body via CSV
+                can_write = (not os.path.exists(fp)) or file_has_autogen_flag(fp)
+                if not can_write:
+                    print(f"Skip content write (manual page): {fp}")
+                    continue
+                page_text = render_single_iframe(content_cfg, title=n["label"])
+                make_dirs_for(fp)
+                with open(fp, "w", encoding="utf-8") as f:
+                    f.write(page_text)
+                print(f"Wrote content for {fp} (single_iframe)")
+                continue
+
+            # Otherwise fall back to the old 'stub if missing' behavior
             is_landing = n["kind"] in ("landing","section")
             children_links = None
             if is_landing and n["id"] in children:
