@@ -2,32 +2,67 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Generate _quarto.yml (navbar + sidebars) and create stub .qmd pages
-from a normalized nodes.csv describing an arbitrary-depth site tree.
+Generate _quarto.yml (navbar + sidebars) and create/update page .qmd files
+from:
+  - a normalized navigation file (nodes.csv), and
+  - an optional content file (page_content.csv) to drive page bodies.
 
-USAGE:
-    python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light
+USAGE (common):
+  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs
+
+USAGE (validate only; prints a tree and warnings; no files written):
+  python generate_quarto_nav.py nodes.csv --validate
+
+USAGE (dry run; print YAML to stdout; no files written):
+  python generate_quarto_nav.py nodes.csv --dry-run
+
+USAGE (custom content CSV path):
+  python generate_quarto_nav.py nodes.csv --content-csv my_content.csv --create-stubs
 
 OPTIONS:
-    --site-title "NESBp"                  # Title in _quarto.yml
-    --sidebar-style docked                # Optional: add style to every sidebar
-    --sidebar-background light            # Optional: add background to every sidebar
-    --dry-run                             # Print YAML to stdout only
-    --validate                            # flag prints a tree view with resolved landing modes and warnings (no files written)     python generate_quarto_nav.py nodes.csv --validate
+  --site-title "NESBp"            Title injected into _quarto.yml
+  --yml-out _quarto.yml           Where to write the Quarto YAML (default: _quarto.yml)
+  --create-stubs                  Create/refresh .qmd files (see autogen rules below)
+  --content-csv page_content.csv  CSV that defines page bodies (default: page_content.csv)
+  --validate                      Print nav tree + warnings; do not write files
+  --dry-run                       Print YAML only; do not write files
+  --sidebar-style docked          Optional sidebar style for each sidebar
+  --sidebar-background light      Optional sidebar background for each sidebar
+  --theme1 cosmo --theme2 brand   Quarto themes to include
+  --css styles.css                Project CSS file
+  --no-toc                        Disable global table of contents in YAML
 
-Robust to:
-- UTF-8 BOM in header (Windows/Excel)
-- Comma/semicolon/tab/pipe delimiters (auto-detect)
-- Blank lines
+CSV: nodes.csv (required)
+  Columns (min): id, label, kind
+  Optional: parent_id, slug, file_path, order, description, draft, search_exclude, external_url, icon
+  'kind' one of: navbar | landing | section | item | external
+  'sidebar_as' (landing only): "text" | "section" | "" (auto: section if has children, else text)
 
-Enhancement:
-- Control how 'landing' nodes appear in the sidebar:
-  CSV column `sidebar_as` with values:
-    - "text"    -> render landing as a simple text/href entry
-    - "section" -> render landing as a section: "<label>" with nested contents
-    - "" (auto) -> if landing has children, render as section; else as text
+CSV: page_content.csv (optional; default filename used if present)
+  Columns (common): id, template, layout, grid_sidebar_width, grid_body_width, grid_margin_width, grid_gutter_width, intro_md
+  Templates:
+    - single_iframe:
+        accepts iframe1_* keys (or legacy iframe_*): iframe1_src, iframe1_height, iframe1_width, iframe1_style
+        default layout: "[ [1] ]"
+    - doble_iframe (two iframes side-by-side):
+        requires iframe1_* and iframe2_* sets (…_src, …_height, …_width, …_style)
+        default layout: "[ [1,1] ]"
 
+Behavior:
+  - Writes _quarto.yml (navbar + per-root sidebars) and includes:
+      project.pre-render (to rerun this script)
+      project.resources: [nodes.csv, page_content.csv]
+  - --create-stubs:
+      * If a page has a content row in page_content.csv:
+          - Create or update the .qmd ONLY if it does not exist OR contains 'autogen: true' in front matter.
+          - Injects grid settings, intro markdown, and the selected template content.
+      * Otherwise, create a minimal stub .qmd only if missing.
+  - Change-only writes to avoid preview reload loops.
 
+Examples:
+  python generate_quarto_nav.py nodes.csv --validate
+  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs
+  python generate_quarto_nav.py nodes.csv --content-csv alt_content.csv --create-stubs
 """
 import csv
 import os
@@ -345,8 +380,7 @@ def render_single_iframe(cfg, title):
             f"      margin-width: {cfg.get('grid_margin_width','')}".rstrip(),
             f"      gutter-width: {cfg.get('grid_gutter_width','')}".rstrip(),
         ]
-        # Clean empty trailing lines
-        grid_lines = [ln for ln in grid_lines if not ln.endswith(": ")]
+        grid_lines = [ln for ln in grid_lines if not ln.endswith(': ')]
     fm = ["---", f'title: "{title}"', "autogen: true"]
     fm += grid_lines
     fm.append("---")
@@ -354,20 +388,74 @@ def render_single_iframe(cfg, title):
 
     intro = (cfg.get("intro_md") or "").strip()
     layout = (cfg.get("layout") or "[ [1] ]").strip()
-    src = cfg.get("iframe_src") or ""
-    height = cfg.get("iframe_height") or "800"
-    width = cfg.get("iframe_width") or "100%"
-    style = cfg.get("iframe_style") or "border:none;"
+
+    # Back-compat: support both iframe_* and iframe1_* field names
+    src   = cfg.get("iframe1_src")   or cfg.get("iframe_src")   or ""
+    height= cfg.get("iframe1_height")or cfg.get("iframe_height")or "800"
+    width = cfg.get("iframe1_width") or cfg.get("iframe_width") or "100%"
+    style = cfg.get("iframe1_style") or cfg.get("iframe_style") or "border:none;"
 
     body = []
     if intro:
-        body.append(intro)
-        body.append("")  # blank line
+        body += [intro, ""]
 
     body.append(f'::: {{layout="{layout}"}}')
     body.append("")
     body.append("```{=html}")
     body.append(f'<iframe style="{style}" height="{height}" width="{width}" src="{src}"></iframe>')
+    body.append("```")
+    body.append("")
+    body.append(":::")
+    body_text = "\n".join(body)
+
+    return fm_text + "\n\n" + body_text + "\n"
+
+def render_doble_iframe(cfg, title):
+    # front matter grid (optional)
+    grid_lines = []
+    if any(cfg.get(k) for k in ("grid_sidebar_width","grid_body_width","grid_margin_width","grid_gutter_width")):
+        grid_lines = [
+            "format:",
+            "  html:",
+            "    grid:",
+            f"      sidebar-width: {cfg.get('grid_sidebar_width','')}".rstrip(),
+            f"      body-width: {cfg.get('grid_body_width','')}".rstrip(),
+            f"      margin-width: {cfg.get('grid_margin_width','')}".rstrip(),
+            f"      gutter-width: {cfg.get('grid_gutter_width','')}".rstrip(),
+        ]
+        grid_lines = [ln for ln in grid_lines if not ln.endswith(': ')]
+    fm = ["---", f'title: "{title}"', "autogen: true"]
+    fm += grid_lines
+    fm.append("---")
+    fm_text = "\n".join(fm)
+
+    intro = (cfg.get("intro_md") or "").strip()
+    layout = (cfg.get("layout") or "[ [1,1] ]").strip()
+
+    # First iframe (same fallbacks as single_iframe)
+    src1   = cfg.get("iframe1_src")   or cfg.get("iframe_src")   or ""
+    height1= cfg.get("iframe1_height")or cfg.get("iframe_height")or "800"
+    width1 = cfg.get("iframe1_width") or cfg.get("iframe_width") or "100%"
+    style1 = cfg.get("iframe1_style") or cfg.get("iframe_style") or "border:none;"
+
+    # Second iframe (requires the new keys)
+    src2   = cfg.get("iframe2_src")   or ""
+    height2= cfg.get("iframe2_height")or "800"
+    width2 = cfg.get("iframe2_width") or "100%"
+    style2 = cfg.get("iframe2_style") or "border:none;"
+
+    body = []
+    if intro:
+        body += [intro, ""]
+
+    body.append(f'::: {{layout="{layout}"}}')
+    body.append("")
+    body.append("```{=html}")
+    body.append(f'<iframe style="{style1}" height="{height1}" width="{width1}" src="{src1}"></iframe>')
+    body.append("```")
+    body.append("")
+    body.append("```{=html}")
+    body.append(f'<iframe style="{style2}" height="{height2}" width="{width2}" src="{src2}"></iframe>')
     body.append("```")
     body.append("")
     body.append(":::")
@@ -439,7 +527,7 @@ def main():
 
             content_cfg = content_by_id.get(n["id"])
             if content_cfg and (content_cfg.get("template") == "single_iframe"):
-                # We control this page body via CSV
+                # Control single_iframe page body via CSV
                 can_write = (not os.path.exists(fp)) or file_has_autogen_flag(fp)
                 if not can_write:
                     print(f"Skip content write (manual page): {fp}")
@@ -449,6 +537,19 @@ def main():
                 with open(fp, "w", encoding="utf-8") as f:
                     f.write(page_text)
                 print(f"Wrote content for {fp} (single_iframe)")
+                continue
+            
+            if content_cfg and (content_cfg.get("template") == "doble_iframe"):
+                # Control doble_iframe page body via CSV
+                can_write = (not os.path.exists(fp)) or file_has_autogen_flag(fp)
+                if not can_write:
+                    print(f"Skip content write (manual page): {fp}")
+                    continue
+                page_text = render_doble_iframe(content_cfg, title=n["label"])
+                make_dirs_for(fp)
+                with open(fp, "w", encoding="utf-8") as f:
+                    f.write(page_text)
+                print(f"Wrote content for {fp} (doble_iframe)")
                 continue
 
             # Otherwise fall back to the old 'stub if missing' behavior

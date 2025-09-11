@@ -10,7 +10,7 @@ format:
       gutter-width: 1.5rem
 ---
 
-Info on MSP experts input.
+Info on MSP experts MSP input.
 
 ::: {layout="[ [1] ]"}
 

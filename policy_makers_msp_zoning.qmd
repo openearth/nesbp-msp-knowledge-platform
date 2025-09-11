@@ -1,5 +1,25 @@
 ---
-title: "Policy Makers - MSP Zoning"
+title: "MSP Zoning"
+autogen: true
+format:
+  html:
+    grid:
+      sidebar-width: 250px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
 ---
 
 Info on policy makers MSP zoning.
+
+::: {layout="[ [1,1] ]"}
+
+```{=html}
+<iframe style="border:none;" height="800" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/governance.html"></iframe>
+```
+
+```{=html}
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=143750791,143750761&layers=143750774&layerNames=OSPAR%20MPA%202023%20%28OSPAR%29"></iframe>
+```
+
+:::
