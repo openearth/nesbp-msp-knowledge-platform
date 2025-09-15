@@ -193,7 +193,7 @@ contentIndex$documentLink[1],
 ```
 # ojs playground
 
-below code should dynamically generate columns with content. does not work. The reason is that ojs code is executed after the document has been rendered, and not before, like is the case with R or Python. 
+below code should dynamically generate columns with content. does not work. The reason is that ojs code is executed after the document has been rendered, and not before, like with R or Python. 
 
 
 ```{ojs}
