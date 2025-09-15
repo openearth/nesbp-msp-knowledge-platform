@@ -1,5 +1,72 @@
 project:
-  title: "msp-portal-framework"
+  pre-render:
+    - "python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light"
+  resources:
+    - nodes.csv
+    - page_content.csv
+  type: website
 
-editor: visual
+website:
+  title: "NESBp"
+  navbar:
+    left:
+      - text: "Policy Makers"
+        href: policy_makers.qmd
+      - text: "MSP Experts"
+        href: msp_experts.qmd
+      - text: "Sectorial Actors"
+        href: sectorial_actors.qmd
 
+  sidebar:
+    - title: "Policy Makers"
+      style: "docked"
+      background: light
+      contents:
+        - text: "Policy Makers"
+          href: policy_makers.qmd
+        - section: "MSP Input Data"
+          href: policy_makers_msp_input.qmd
+          contents:
+            - text: "Administrative Borders"
+              href: policy_makers_administrative_borders.qmd
+            - text: "Aquaculture"
+              href: policy_makers_aquaculture.qmd
+        - text: "Knowledge Base for Decisions"
+          href: policy_makers_knowledge_base.qmd
+        - text: "MSP Zoning"
+          href: policy_makers_msp_zoning.qmd
+
+    - title: "MSP Experts"
+      style: "docked"
+      background: light
+      contents:
+        - text: "MSP Experts"
+          href: msp_experts.qmd
+        - text: "MSP Input Data"
+          href: msp_experts_msp_input.qmd
+        - text: "Knowledge Base for Decisions"
+          href: msp_experts_knowledge_base.qmd
+        - text: "MSP Zoning"
+          href: msp_experts_msp_zoning.qmd
+
+    - title: "Sectorial Actors"
+      style: "docked"
+      background: light
+      contents:
+        - text: "Sectorial Actors"
+          href: sectorial_actors.qmd
+        - text: "MSP Input Data"
+          href: sectorial_actors_msp_input.qmd
+        - text: "Knowledge Base for Decisions"
+          href: sectorial_actors_knowledge_base.qmd
+        - text: "MSP Zoning"
+          href: sectorial_actors_msp_zoning.qmd
+
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
