@@ -6,6 +6,9 @@ project:
     - page_content.csv
   type: website
 
+execute:
+  freeze: auto
+
 website:
   title: "NESBp"
   navbar:
