@@ -471,7 +471,7 @@ def main():
     ap.add_argument("csv", nargs="?", default="nodes.csv", help="Path to nodes.csv")
     ap.add_argument("--content-csv", default="page_content.csv",
                 help="Optional CSV to drive page bodies (id-based templates)")
-    ap.add_argument("--site-title", default="NESBp")
+    ap.add_argument("--site-title", default="NESBp MSP knowledge sharing platform")
     ap.add_argument("--yml-out", default="_quarto.yml")
     ap.add_argument("--create-stubs", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
