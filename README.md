@@ -1,10 +1,11 @@
-Platform for MSP data-, information and knowledge sharing
+#Platform for MSP data-, information and knowledge sharing
 
 Northern European Basins project (NESBp)
 
-Developed by Deltares, The Netherlands
+*Developed by Deltares, The Netherlands*
 
 Requirements:
+
 - Python 3.7
 - Quarto (latest version)
 
