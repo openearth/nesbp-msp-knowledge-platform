@@ -24,17 +24,24 @@ website:
       contents:
         - text: "Policy Makers"
           href: policy_makers.qmd
-        - section: "MSP Input Data"
-          href: policy_makers_msp_input.qmd
+        - section: "Knowledge Base for Decisions"
+          href: policy_makers_knowledge_base.qmd
+          contents:
+            - text: "Nature"
+              href: policy_makers_nature.qmd
+        - section: "MSP Zoning"
+          href: policy_makers_msp_zoning.qmd
           contents:
             - text: "Administrative Borders"
               href: policy_makers_administrative_borders.qmd
-            - text: "Aquaculture"
-              href: policy_makers_aquaculture.qmd
-        - text: "Knowledge Base for Decisions"
-          href: policy_makers_knowledge_base.qmd
-        - text: "MSP Zoning"
-          href: policy_makers_msp_zoning.qmd
+            - text: "MSP Zoning Netherlands"
+              href: policy_makers_msp_zoning_NL.qmd
+            - text: "MSP Zoning Germany"
+              href: policy_makers_msp_zoning_GE.qmd
+            - text: "MSP Zoning Belgium"
+              href: policy_makers_msp_zoning_BE.qmd
+            - text: "MSP Zoning Denmark"
+              href: policy_makers_msp_zoning_DK.qmd
 
     - title: "MSP Experts"
       style: "docked"
