@@ -10,7 +10,7 @@ execute:
   freeze: auto
 
 website:
-  title: "NESBp"
+  title: "NESBp MSP knowledge sharing platform"
   navbar:
     left:
       - text: "Policy Makers"
