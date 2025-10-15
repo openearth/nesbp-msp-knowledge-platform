@@ -1,5 +1,5 @@
 ---
-title: "MSP Zoning"
+title: "MSP Zoning Germany"
 autogen: true
 format:
   html:
@@ -10,7 +10,7 @@ format:
       gutter-width: 1.5rem
 ---
 
-Info on MSP zoning
+Info on MSP zoning for Germany
 
 ::: {layout="[ [1,1] ]"}
 
