@@ -10,9 +10,6 @@ from:
 USAGE (common):
   python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs
 
-USAGE (with logo):
-  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --logo assets/logo.png
-
 USAGE (validate only; prints a tree and warnings; no files written):
   python generate_quarto_nav.py nodes.csv --validate
 
@@ -21,6 +18,9 @@ USAGE (dry run; print YAML to stdout; no files written):
 
 USAGE (custom content CSV path):
   python generate_quarto_nav.py nodes.csv --content-csv my_content.csv --create-stubs
+
+USAGE (with logo):
+  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --logo assets/logo.png
 
 OPTIONS:
   --site-title "NESBp"            Title injected into _quarto.yml
@@ -33,7 +33,7 @@ OPTIONS:
   --sidebar-background light      Optional sidebar background for each sidebar
   --theme1 cosmo --theme2 brand   Quarto themes to include
   --css styles.css                Project CSS file
-  --logo assets/logo.png          Logo image path for navbar (optional)
+  --logo assets/NESBp_logo.png    Logo image path for navbar (optional)
   --no-toc                        Disable global table of contents in YAML
 
 CSV: nodes.csv (required)
@@ -56,7 +56,8 @@ Behavior:
   - Writes _quarto.yml (navbar + per-root sidebars) and includes:
       project.pre-render (to rerun this script)
       project.resources: [nodes.csv, page_content.csv, logo.png (if --logo specified)]
-      navbar.logo: logo path (if --logo specified)
+      website.navbar.logo: logo path (if --logo specified)
+  - --logo: Adds logo image to navbar (replaces title text) and includes it in resources
   - --create-stubs:
       * If a page has a content row in page_content.csv:
           - Create or update the .qmd ONLY if it does not exist OR contains 'autogen: true' in front matter.
@@ -67,8 +68,8 @@ Behavior:
 Examples:
   python generate_quarto_nav.py nodes.csv --validate
   python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs
-  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --logo assets/logo.png
   python generate_quarto_nav.py nodes.csv --content-csv alt_content.csv --create-stubs
+  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --logo assets/NESBp_logo.png
 """
 import csv
 import os
@@ -492,7 +493,7 @@ def main():
     ap.add_argument("--theme1", default="cosmo")
     ap.add_argument("--theme2", default="brand")
     ap.add_argument("--css", default="styles.css")
-    ap.add_argument("--logo", default=None, help="Logo image path for navbar (e.g., assets/logo.png)")
+    ap.add_argument("--logo", default=None, help="Logo image path for navbar (e.g., assets/NESBp_logo.png)")
     ap.add_argument("--no-toc", action="store_true")
     args = ap.parse_args()
 
