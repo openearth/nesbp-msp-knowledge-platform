@@ -10,6 +10,9 @@ from:
 USAGE (common):
   python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs
 
+USAGE (with logo):
+  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --logo assets/logo.png
+
 USAGE (validate only; prints a tree and warnings; no files written):
   python generate_quarto_nav.py nodes.csv --validate
 
@@ -30,6 +33,7 @@ OPTIONS:
   --sidebar-background light      Optional sidebar background for each sidebar
   --theme1 cosmo --theme2 brand   Quarto themes to include
   --css styles.css                Project CSS file
+  --logo assets/logo.png          Logo image path for navbar (optional)
   --no-toc                        Disable global table of contents in YAML
 
 CSV: nodes.csv (required)
@@ -51,7 +55,8 @@ CSV: page_content.csv (optional; default filename used if present)
 Behavior:
   - Writes _quarto.yml (navbar + per-root sidebars) and includes:
       project.pre-render (to rerun this script)
-      project.resources: [nodes.csv, page_content.csv]
+      project.resources: [nodes.csv, page_content.csv, logo.png (if --logo specified)]
+      navbar.logo: logo path (if --logo specified)
   - --create-stubs:
       * If a page has a content row in page_content.csv:
           - Create or update the .qmd ONLY if it does not exist OR contains 'autogen: true' in front matter.
@@ -62,6 +67,7 @@ Behavior:
 Examples:
   python generate_quarto_nav.py nodes.csv --validate
   python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs
+  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --logo assets/logo.png
   python generate_quarto_nav.py nodes.csv --content-csv alt_content.csv --create-stubs
 """
 import csv
@@ -243,19 +249,27 @@ def build_sidebar_contents(nodes, children, node_id):
         lines.append(f'  href: {href}')
     return lines
 
-def build_yaml(site_title, roots, nodes, children, theme1, theme2, css, toc, sidebar_style, sidebar_background):
+def build_yaml(site_title, roots, nodes, children, theme1, theme2, css, toc, sidebar_style, sidebar_background, logo=None):
     L = []
     L.append("project:")
     L.append("  pre-render:")
-    L.append('    - "python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light"')
+    # Build pre-render command with current arguments
+    pre_render_cmd = 'python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light'
+    if logo:
+        pre_render_cmd += f' --logo {logo}'
+    L.append(f'    - "{pre_render_cmd}"')
     L.append("  resources:")
     L.append("    - nodes.csv")
     L.append("    - page_content.csv")
+    if logo:
+        L.append(f"    - {logo}")
     L.append("  type: website")
     L.append("")
     L.append("website:")
     L.append(f'  title: "{site_title}"')
     L.append("  navbar:")
+    if logo:
+        L.append(f'    logo: {logo}')
     L.append("    left:")
     for root in roots:
         L.append(f'      - text: "{root["label"]}"')
@@ -478,6 +492,7 @@ def main():
     ap.add_argument("--theme1", default="cosmo")
     ap.add_argument("--theme2", default="brand")
     ap.add_argument("--css", default="styles.css")
+    ap.add_argument("--logo", default=None, help="Logo image path for navbar (e.g., assets/logo.png)")
     ap.add_argument("--no-toc", action="store_true")
     args = ap.parse_args()
 
@@ -500,7 +515,8 @@ def main():
         theme1=args.theme1, theme2=args.theme2, css=args.css,
         toc=not args.no_toc,
         sidebar_style=args.sidebar_style,
-        sidebar_background=args.sidebar_background
+        sidebar_background=args.sidebar_background,
+        logo=args.logo
     )
 
     if args.dry_run:

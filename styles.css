@@ -47,6 +47,16 @@ h1::after {
   font-weight: 600;
 }
 
+.navbar-title {
+  display: none !important;
+}
+
+.navbar-brand img {
+  height: 35px;
+  width: auto;
+  max-height: 45px;
+}
+
 /* Sidebar styling */
 #quarto-sidebar {
   border-right: 1px solid var(--color-primary) !important;
