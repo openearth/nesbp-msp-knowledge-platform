@@ -1,1 +1,113 @@
-/* css styles */
+/* CSS styles for NESBp */
+
+/* CSS Custom Properties */
+:root {
+  --color-primary: #2e89bf;
+  --color-primary-dark: #1e6a9f;
+  --spacing-unit: 1rem;
+  --border-radius: 4px;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-primary);
+}
+
+h1::after {
+  content: '';
+  display: block;
+  position: relative;
+  width: 50px;
+  border-bottom: 3px solid var(--color-primary);
+  padding-top: 10px;
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: var(--color-primary) !important;
+  border-bottom: 1px solid var(--color-primary);
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: #fff !important;
+}
+
+.navbar-brand:hover,
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.navbar-nav .nav-link.active {
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.navbar-title {
+  display: none !important;
+}
+
+.navbar-brand img {
+  height: 35px;
+  width: auto;
+  max-height: 45px;
+}
+
+/* Sidebar styling */
+#quarto-sidebar {
+  border-right: 1px solid var(--color-primary) !important;
+}
+
+/* Iframe container styling */
+.quarto-layout-panel {
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-unit);
+  background-color: #fff;
+}
+
+.quarto-layout-panel iframe {
+  border-radius: var(--border-radius);
+}
+
+.quarto-layout-panel[data-layout*="[1,1]"] {
+  padding: 0;
+}
+
+.quarto-layout-panel[data-layout*="[1,1]"] .quarto-layout-cell {
+  padding: var(--spacing-unit);
+}
+
+.quarto-layout-panel[data-layout*="[1,1]"] .quarto-layout-cell:not(:first-child) {
+  border-left: 1px solid var(--color-primary);
+  padding-left: calc(var(--spacing-unit) + var(--spacing-unit)); /* Double padding on left for second cell */
+}
+
+/* Grid layout containers */
+.quarto-grid {
+  gap: var(--spacing-unit);
+}
+
+/* Intro text styling */
+.intro-text {
+  margin-bottom: 2rem;
+  color: var(--bs-gray-700);
+  line-height: 1.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  h1::after {
+    width: 40px;
+    border-bottom-width: 2px;
+  }
+  
+  #quarto-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--color-primary);
+  }
+}

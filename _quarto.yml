@@ -1,9 +1,10 @@
 project:
   pre-render:
-    - "python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light"
+    - "python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light --logo assets/NESBp_logo.png"
   resources:
     - nodes.csv
     - page_content.csv
+    - assets/NESBp_logo.png
   type: website
 
 execute:
@@ -12,6 +13,7 @@ execute:
 website:
   title: "NESBp MSP knowledge sharing platform"
   navbar:
+    logo: assets/NESBp_logo.png
     left:
       - text: "Policy Makers"
         href: policy_makers.qmd
