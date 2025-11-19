@@ -1,0 +1,21 @@
+---
+title: "Case study - North-Western Mediterranean"
+autogen: true
+format:
+  html:
+    grid:
+      sidebar-width: 250px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
+---
+
+Info on MSP experts MSP zoning maps
+
+::: {layout="[ [1] ]"}
+
+```{=html}
+<iframe style="border:none;" height="800" width="100%" src="https://geoplatform.tools4msp.eu/apps/2067/embed"></iframe>
+```
+
+:::

@@ -15,11 +15,11 @@ Info on MSP zoning for The Netherlands
 ::: {layout="[ [1,1] ]"}
 
 ```{=html}
-<iframe style="border:none;" height="800" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/MSP2030.html"></iframe>
+<iframe style="border:none;" height="800" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/MSP2030.html#nl-msp-2030"></iframe>
 ```
 
 ```{=html}
-<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=144094709,146392362&layers=148206239&layerNames=MSP%20Zoning%20Areas%20%28Emodnet,%202021%29"></iframe>
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=143750761,143750791,144094709,146388423,146742883&layers=146563816&layerNames=SVNZ%20structural%20vision%20map,%20North%20Sea%20Program%202022-2027."></iframe>
 ```
 
 :::
