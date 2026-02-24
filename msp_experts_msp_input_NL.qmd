@@ -1,0 +1,21 @@
+---
+title: "MSP input Netherlands"
+autogen: true
+format:
+  html:
+    grid:
+      sidebar-width: 250px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
+---
+
+NA
+
+::: {layout="[ [1] ]"}
+
+```{=html}
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=144094709,146388423&layers=146620616,146563816&layerNames=Wind%20farms%20Roadmap%202030%20%28SVNZ%29,SVNZ%20structural%20vision%20map,%20North%20Sea%20Program%202022-2027."></iframe>
+```
+
+:::

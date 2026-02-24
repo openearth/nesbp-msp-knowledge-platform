@@ -1,0 +1,21 @@
+---
+title: "MSP input Germany"
+autogen: true
+format:
+  html:
+    grid:
+      sidebar-width: 250px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
+---
+
+NA
+
+::: {layout="[ [1] ]"}
+
+```{=html}
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=144094709,146619641&layers=146619838,146619765,146619730,146619715,146619708,146619692,146619659&layerNames=Defense%20plans%202021,Scientific%20Research%20plans%202021,Shipping%20plans%202021,Offshore%20Wind%20Energy%20plans%202021,Nature%20conservation%20plans%202021,Fishery%20plans%202021,Cables%20and%20Pipelines%20plans%202021"></iframe>
+```
+
+:::

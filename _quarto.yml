@@ -56,8 +56,17 @@ website:
       contents:
         - text: "MSP Experts"
           href: msp_experts.qmd
-        - text: "MSP Input Data"
+        - section: "MSP Input Data"
           href: msp_experts_msp_input.qmd
+          contents:
+            - text: "MSP input Netherlands"
+              href: msp_experts_msp_input_NL.qmd
+            - text: "MSP input Germany"
+              href: msp_experts_msp_input_GE.qmd
+            - text: "MSP input Belgium"
+              href: msp_experts_msp_input_BE.qmd
+            - text: "MSP input Denmark"
+              href: msp_experts_msp_input_DK.qmd
         - text: "Knowledge Base for Decisions"
           href: msp_experts_knowledge_base.qmd
         - text: "MSP Zoning"

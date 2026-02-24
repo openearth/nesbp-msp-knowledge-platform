@@ -7,7 +7,10 @@ from:
   - a normalized navigation file (nodes.csv), and
   - an optional content file (page_content.csv) to drive page bodies.
 
-USAGE (common):
+USAGE (standard, same as pre-render from _quarto.yml, which is also used by running 'quarto render'):
+  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light --logo assets/NESBp_logo.png
+
+USAGE (basic):
   python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs
 
 USAGE (validate only; prints a tree and warnings; no files written):
