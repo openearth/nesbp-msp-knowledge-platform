@@ -1,5 +1,13 @@
 ---
-title: "NESBp"
+title: "GNSBI and NESBp Knowledge Sharing Platform"
 ---
 
-Info on NESBp.
+This platform is in development under the [Northern European Sea Basins project](https://vasab.org/project/nesbp/) (NESBp). It is supporting the G[reater North Sea Basin Initiative](https://maritime-spatial-planning.ec.europa.eu/news/establishment-greater-north-sea-basin-initiative-gnsbi) (GNSBI). GNSBI is a framework for collaboration between nine countries from the North Sea region, to strengthen cooperation on maritime spatial planning (MSP).
+
+## How it works
+
+At the top of this page, you can choose the type of entry to the portal (policy maker / MSP expert / Sectorial actors). When this is chose, you choose the type of information that you are interested in at the left side panel (MSP input / Knowledge base / MSP zoning). This opens up a menu where more specific information layers can be chosen.
+
+## Credits
+
+The platform is developed by [Deltares](https://www.deltares.nl/en), with input from NESBp WP5 ([Knowledge Transfer & Sharing](https://vasab.org/project/nesbp/implementation/knowledge-transfer/)) partners in close collaboration with GNSBI. Comments and input from [OSPAR](https://www.ospar.org/), [HELCOM](https://helcom.fi/), [Technical Expert Group (TEG) on Data for MSP](https://maritime-spatial-planning.ec.europa.eu/msp-resources/technical-expert-group-teg-data-msp), and the [eMSP](https://vasab.org/project/emsp-nbsr/) project were highly appreciated. 
