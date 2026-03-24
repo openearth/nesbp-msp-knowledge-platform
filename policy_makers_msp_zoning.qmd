@@ -19,7 +19,7 @@ Info on MSP zoning
 ```
 
 ```{=html}
-<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=144094709,146392362&layers=148206239&layerNames=MSP%20Zoning%20Areas%20%28Emodnet,%202021%29"></iframe>
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea-embedded/?folders=144094709,146392362&layers=148206239&layerNames=MSP%20Zoning%20Areas%20%28Emodnet,%202021%29"></iframe>
 ```
 
 :::

@@ -15,7 +15,7 @@ NA
 ::: {layout="[ [1] ]"}
 
 ```{=html}
-<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=144094709,146388423&layers=146620616,146563816&layerNames=Wind%20farms%20Roadmap%202030%20%28SVNZ%29,SVNZ%20structural%20vision%20map,%20North%20Sea%20Program%202022-2027."></iframe>
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea-embedded/?folders=144094709,146388423&layers=146620616,146563816&layerNames=Wind%20farms%20Roadmap%202030%20%28SVNZ%29,SVNZ%20structural%20vision%20map,%20North%20Sea%20Program%202022-2027."></iframe>
 ```
 
 :::
