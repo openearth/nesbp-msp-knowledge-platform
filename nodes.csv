@@ -8,7 +8,7 @@ pm-knowledge,pm,Knowledge Base for Decisions,knowledge-base,section,policy_maker
 pm-knowledge-nature,pm-knowledge,Nature,nature areas,item,policy_makers_nature.qmd,1,,,,,,
 pm-knowledge-case-mediterranean,pm-knowledge,Case study - North-Western Mediterranean,case-north-western-mediterranean,item,policy_makers_case_north-western_mediterranean.qmd,2,,,,,,
 ,,,,,,,,,,,,
-pm-admin,pm,MSP Administrative boundaries,msp-zoning,section,policy_makers_msp_zoning.qmd,3,,,,,,
+pm-admin,pm,MSP Administrative boundaries,msp-administrative-boundaries,section,msp-administrative-boundaries.qmd,3,,,,,,
 pm-admin-eez,pm-admin,Exclusive Economic Zones,exclusive-economic-zones,item,exclusive-economic-zones.qmd,1,,"v12, world, 2023",,,,
 pm-admin-ospar,pm-admin,OSPAR Regions,ospar-regions,item,ospar-regions.qmd,2,,,,,,
 pm-admin-gnsbi,pm-admin,GNSBI Boundaries,gnsbi-boundaries,item,gnsbi-boundaries.qmd,3,,,,,,
