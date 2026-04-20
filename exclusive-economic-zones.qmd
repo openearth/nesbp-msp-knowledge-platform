@@ -1,0 +1,21 @@
+---
+title: "Exclusive Economic Zones"
+autogen: true
+format:
+  html:
+    grid:
+      sidebar-width: 250px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
+---
+
+Maritime Boundaries and Exclusive Economic Zones from the VLIZ Maritime Boundaries Geodatabase. Boundaries have been built using information about treaties between coastal countries. When treaties are not available, median lines have been calculated. An exclusive economic zone (EEZ) is a sea zone extending from a state's coast or baseline over which the state has special rights over the exploration and use of marine resources. Generally a state's EEZ extends 200 nautical miles out from its coast, except where resulting points would be closer to another country. This dataset also contains delimitation of overlapping claims, court rulings and joint regimes. Flanders Marine Institute (2023). Maritime Boundaries Geodatabase: Maritime Boundaries and Exclusive Economic Zones (200NM), version 12. Available online at https://www.marineregions.org/. https://doi.org/10.14284/632
+
+::: {layout="[ [1] ]"}
+
+```{=html}
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea-embedded/?folders=LaL1TbV4SFGhn15RgGj6qQ&layers=OGwGRPELReC0Ti1Ru2OAIA&layerNames=Exclusive%20Economic%20Zones%20%28v12,%20world,%202023%29"></iframe>
+```
+
+:::

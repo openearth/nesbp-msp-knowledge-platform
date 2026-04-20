@@ -1,0 +1,12 @@
+---
+title: "MSP Administrative boundaries"
+---
+
+## Contents
+
+- [Exclusive Economic Zones](exclusive-economic-zones.qmd)
+- [OSPAR Regions](ospar-regions.qmd)
+- [GNSBI Boundaries](gnsbi-boundaries.qmd)
+- [NSEC Boundaries](nsec-boundaries.qmd)
+- [Territorial Seas (12nm)](territorial-seas-12nm.qmd)
+

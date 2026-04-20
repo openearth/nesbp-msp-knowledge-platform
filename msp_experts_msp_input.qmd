@@ -10,12 +10,12 @@ format:
       gutter-width: 1.5rem
 ---
 
-Info on MSP experts MSP input.
+Info on MSP experts MSP input
 
 ::: {layout="[ [1] ]"}
 
 ```{=html}
-<iframe style="border:none;" height="800" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/nature.html#marine-biodiversity-and-protected-areas"></iframe>
+<iframe style="border:none;" height="800" width="100%" src=""></iframe>
 ```
 
 :::

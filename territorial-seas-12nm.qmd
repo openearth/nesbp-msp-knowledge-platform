@@ -1,0 +1,21 @@
+---
+title: "Territorial Seas (12nm)"
+autogen: true
+format:
+  html:
+    grid:
+      sidebar-width: 250px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
+---
+
+Territorial Seas from the VLIZ Maritime Boundaries Geodatabase. Territorial seas are a belt of coastal waters extending at most 12 nautical miles (22.2 km; 13.8 mi) from the baseline (usually the mean low-water mark) of a coastal state.. Flanders Marine Institute (2023). Maritime Boundaries Geodatabase: Territorial Seas (12NM), version 4. Available online at https://www.marineregions.org/. https://doi.org/10.14284/633
+
+::: {layout="[ [1] ]"}
+
+```{=html}
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea-embedded/?folders=LaL1TbV4SFGhn15RgGj6qQ&layers=NddnWv3mRN6CqHmmtTAeqw&layerNames=Territorial%20Seas%20%2812NM%29,%20%28version%204,%202023,%20world%29"></iframe>
+```
+
+:::
