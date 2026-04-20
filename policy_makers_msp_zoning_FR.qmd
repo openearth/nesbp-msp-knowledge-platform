@@ -1,5 +1,5 @@
 ---
-title: "Belgium"
+title: "France"
 autogen: true
 format:
   html:
@@ -10,7 +10,7 @@ format:
       gutter-width: 1.5rem
 ---
 
-Info on MSP input for Belgium
+Info on MSP input for France
 
 ::: {layout="[ [1] ]"}
 

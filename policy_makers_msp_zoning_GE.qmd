@@ -1,5 +1,5 @@
 ---
-title: "MSP Zoning Germany"
+title: "Germany"
 autogen: true
 format:
   html:
@@ -10,16 +10,12 @@ format:
       gutter-width: 1.5rem
 ---
 
-Info on MSP zoning for Germany
+Info on MSP input for Germany
 
-::: {layout="[ [1,1] ]"}
-
-```{=html}
-<iframe style="border:none;" height="800" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/MSP2030.html"></iframe>
-```
+::: {layout="[ [1] ]"}
 
 ```{=html}
-<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea/?folders=144094709,146392362&layers=148206239&layerNames=MSP%20Zoning%20Areas%20%28Emodnet,%202021%29"></iframe>
+<iframe style="border:none;" height="800" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/MSP2030.html#ge-sh-msp-2030"></iframe>
 ```
 
 :::

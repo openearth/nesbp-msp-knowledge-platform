@@ -1,5 +1,25 @@
 ---
-title: "msp input Belgium"
+title: "MSP input Belgium"
+autogen: true
+format:
+  html:
+    grid:
+      sidebar-width: 250px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
 ---
 
-Content for **msp input Belgium**.
+Info on MSP experts MSP input for Belgium
+
+::: {layout="[ [1,1] ]"}
+
+```{=html}
+<iframe style="border:none;" height="800" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/MSP2030.html#be-msp-2030"></iframe>
+```
+
+```{=html}
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea-embedded/?folders=144094709,146388827&layers=146388968,146388947,146388931,146388887&layerNames=Aquaculture%20zones%20in%20the%20Belgian%20Part%20of%20the%20North%20Sea%20%28Geo.be,%202019%29,Commercial%20and%20industrial%20zones%20in%20the%20Belgian%20Part%20of%20the%20North%20Sea%20%28Geo.be,%202019%29,Energy,%20cable%20and%20pipeline%20zones%20in%20the%20Belgian%20Part%20of%20the%20North%20Sea%20%28Geo.be,%202019%29,Management%20zones%20with%20regards%20to%20fisheries%20in%20the%20Belgian%20Part%20of%20the%20North%20Sea%20%28Geo.be,%202019%29"></iframe>
+```
+
+:::

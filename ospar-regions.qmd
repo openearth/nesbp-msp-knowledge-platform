@@ -1,0 +1,22 @@
+---
+title: "OSPAR Regions"
+autogen: true
+format:
+  html:
+    grid:
+      sidebar-width: 250px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
+---
+
+OSPAR Regions
+  https://odims.ospar.org/en/submissions/ospar_regions_2017_01_003/
+
+::: {layout="[ [1] ]"}
+
+```{=html}
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea-embedded/?folders=LaL1TbV4SFGhn15RgGj6qQ&layers=OALGPGiCTduGU0ki9GCV9Q,OALGPGiCTduGU0ki9GCV9Q&layerNames=OSPAR%20Regions,OSPAR%20Regions"></iframe>
+```
+
+:::

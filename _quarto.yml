@@ -36,19 +36,47 @@ website:
               href: policy_makers_nature.qmd
             - text: "Case study - North-Western Mediterranean"
               href: policy_makers_case_north-western_mediterranean.qmd
+        - section: "MSP Administrative boundaries"
+          href: msp-administrative-boundaries.qmd
+          contents:
+            - text: "Exclusive Economic Zones"
+              href: exclusive-economic-zones.qmd
+            - text: "OSPAR Regions"
+              href: ospar-regions.qmd
+            - text: "GNSBI Boundaries"
+              href: gnsbi-boundaries.qmd
+            - text: "NSEC Boundaries"
+              href: nsec-boundaries.qmd
+            - text: "Territorial Seas (12nm)"
+              href: territorial-seas-12nm.qmd
         - section: "MSP Zoning"
           href: policy_makers_msp_zoning.qmd
           contents:
-            - text: "Administrative Borders"
-              href: policy_makers_administrative_borders.qmd
-            - text: "MSP Zoning Netherlands"
+            - text: "Planned sea use data"
+              href: policy_makers_planned_sea_use.qmd
+        - section: "National MSP plan maps"
+          href: national-msp-plan-maps.qmd
+          contents:
+            - text: "Netherlands"
               href: policy_makers_msp_zoning_NL.qmd
-            - text: "MSP Zoning Germany"
+            - text: "Germany"
               href: policy_makers_msp_zoning_GE.qmd
-            - text: "MSP Zoning Belgium"
+            - text: "Belgium"
               href: policy_makers_msp_zoning_BE.qmd
-            - text: "MSP Zoning Denmark"
+            - text: "Denmark"
               href: policy_makers_msp_zoning_DK.qmd
+            - text: "Norway"
+              href: policy_makers_msp_zoning_NO.qmd
+            - text: "England"
+              href: policy_makers_msp_zoning_EN.qmd
+            - text: "France"
+              href: policy_makers_msp_zoning_FR.qmd
+            - text: "Sweden"
+              href: policy_makers_msp_zoning_SE.qmd
+            - text: "Scotland"
+              href: policy_makers_msp_zoning_SC.qmd
+            - text: "Ireland"
+              href: policy_makers_msp_zoning_IE.qmd
 
     - title: "MSP Experts"
       style: "docked"
@@ -67,6 +95,18 @@ website:
               href: msp_experts_msp_input_BE.qmd
             - text: "MSP input Denmark"
               href: msp_experts_msp_input_DK.qmd
+            - text: "MSP input Norway"
+              href: msp_experts_msp_input_NO.qmd
+            - text: "MSP input England"
+              href: msp_experts_msp_input_EN.qmd
+            - text: "MSP input France"
+              href: msp_experts_msp_input_FR.qmd
+            - text: "MSP input Sweden"
+              href: msp_experts_msp_input_SE.qmd
+            - text: "MSP input Scotland"
+              href: msp_experts_msp_input_SC.qmd
+            - text: "MSP input Ireland"
+              href: msp_experts_msp_input_IE.qmd
         - text: "Knowledge Base for Decisions"
           href: msp_experts_knowledge_base.qmd
         - text: "MSP Zoning"
