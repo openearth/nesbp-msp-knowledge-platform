@@ -10,7 +10,7 @@ format:
       gutter-width: 1.5rem
 ---
 
-OSPAR Regions
+OSPAR Regions
   https://odims.ospar.org/en/submissions/ospar_regions_2017_01_003/
 
 ::: {layout="[ [1] ]"}
