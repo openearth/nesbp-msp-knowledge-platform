@@ -1,5 +1,0 @@
----
-title: "Sectorial Actors - MSP Input"
----
-
-Info on sectorial actors MSP input.

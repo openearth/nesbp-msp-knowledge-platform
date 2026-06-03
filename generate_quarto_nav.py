@@ -8,7 +8,7 @@ from:
   - an optional content file (page_content.csv) to drive page bodies.
 
 USAGE (standard, same as pre-render from _quarto.yml, which is also used by running 'quarto render'):
-  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light --logo assets/NESBp_logo.png
+  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light --sidebar-collapse-level 1 --logo assets/GNSBI_NESBp_combined.png
 
 USAGE (basic):
   python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs
@@ -26,18 +26,19 @@ USAGE (with logo):
   python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --logo assets/logo.png
 
 OPTIONS:
-  --site-title "NESBp"            Title injected into _quarto.yml
-  --yml-out _quarto.yml           Where to write the Quarto YAML (default: _quarto.yml)
-  --create-stubs                  Create/refresh .qmd files (see autogen rules below)
-  --content-csv page_content.csv  CSV that defines page bodies (default: page_content.csv)
-  --validate                      Print nav tree + warnings; do not write files
-  --dry-run                       Print YAML only; do not write files
-  --sidebar-style docked          Optional sidebar style for each sidebar
-  --sidebar-background light      Optional sidebar background for each sidebar
-  --theme1 cosmo --theme2 brand   Quarto themes to include
-  --css styles.css                Project CSS file
-  --logo assets/NESBp_logo.png    Logo image path for navbar (optional)
-  --no-toc                        Disable global table of contents in YAML
+  --site-title "NESBp"                      Title injected into _quarto.yml
+  --yml-out _quarto.yml                     Where to write the Quarto YAML (default: _quarto.yml)
+  --create-stubs                            Create/refresh .qmd files (see autogen rules below)
+  --content-csv page_content.csv            CSV that defines page bodies (default: page_content.csv)
+  --validate                                Print nav tree + warnings; do not write files
+  --dry-run                                 Print YAML only; do not write files
+  --sidebar-style docked                    Optional sidebar style for each sidebar
+  --sidebar-background light                Optional sidebar background for each sidebar
+  --sidebar-collapse-level 1                Quarto collapse-level (1 = sections collapsed on load; default Quarto is 2)
+  --theme1 cosmo --theme2 brand             Quarto themes to include
+  --css styles.css                          Project CSS file
+  --logo assets/GNSBI_NESBp_combined.png    Logo image path for navbar (optional)
+  --no-toc                                  Disable global table of contents in YAML
 
 CSV: nodes.csv (required)
   Columns (min): id, label, kind
@@ -72,7 +73,7 @@ Examples:
   python generate_quarto_nav.py nodes.csv --validate
   python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs
   python generate_quarto_nav.py nodes.csv --content-csv alt_content.csv --create-stubs
-  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --logo assets/NESBp_logo.png
+  python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --logo assets/GNSBI_NESBp_combined.png
 """
 import csv
 import os
@@ -253,12 +254,14 @@ def build_sidebar_contents(nodes, children, node_id):
         lines.append(f'  href: {href}')
     return lines
 
-def build_yaml(site_title, roots, nodes, children, theme1, theme2, css, toc, sidebar_style, sidebar_background, logo=None):
+def build_yaml(site_title, roots, nodes, children, theme1, theme2, css, toc, sidebar_style, sidebar_background, logo=None, sidebar_collapse_level=None):
     L = []
     L.append("project:")
     L.append("  pre-render:")
     # Build pre-render command with current arguments
     pre_render_cmd = 'python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light'
+    if sidebar_collapse_level is not None:
+        pre_render_cmd += f' --sidebar-collapse-level {sidebar_collapse_level}'
     if logo:
         pre_render_cmd += f' --logo {logo}'
     L.append(f'    - "{pre_render_cmd}"')
@@ -290,6 +293,8 @@ def build_yaml(site_title, roots, nodes, children, theme1, theme2, css, toc, sid
             L.append(f'      style: "{sidebar_style}"')
         if sidebar_background:
             L.append(f'      background: {sidebar_background}')
+        if sidebar_collapse_level is not None:
+            L.append(f'      collapse-level: {sidebar_collapse_level}')
         L.append("      contents:")
 
         root_children = children.get(root["id"], [])
@@ -496,10 +501,12 @@ def main():
     ap.add_argument("--validate", action="store_true", help="Print a tree + warnings; do not write files")
     ap.add_argument("--sidebar-style", default=None)
     ap.add_argument("--sidebar-background", default=None)
+    ap.add_argument("--sidebar-collapse-level", type=int, default=1,
+                help="Quarto sidebar collapse-level (1 = collapsed on load, 2 = default Quarto expansion)")
     ap.add_argument("--theme1", default="cosmo")
     ap.add_argument("--theme2", default="brand")
     ap.add_argument("--css", default="styles.css")
-    ap.add_argument("--logo", default=None, help="Logo image path for navbar (e.g., assets/NESBp_logo.png)")
+    ap.add_argument("--logo", default=None, help="Logo image path for navbar (e.g., assets/GNSBI_NESBp_combined.png)")
     ap.add_argument("--no-toc", action="store_true")
     args = ap.parse_args()
 
@@ -523,7 +530,8 @@ def main():
         toc=not args.no_toc,
         sidebar_style=args.sidebar_style,
         sidebar_background=args.sidebar_background,
-        logo=args.logo
+        logo=args.logo,
+        sidebar_collapse_level=args.sidebar_collapse_level,
     )
 
     if args.dry_run:

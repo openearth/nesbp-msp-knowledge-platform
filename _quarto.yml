@@ -1,10 +1,10 @@
 project:
   pre-render:
-    - "python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light --logo assets/NESBp_logo.png"
+    - "python generate_quarto_nav.py nodes.csv --yml-out _quarto.yml --create-stubs --sidebar-style docked --sidebar-background light --sidebar-collapse-level 1 --logo assets/GNSBI_NESBp_combined.png"
   resources:
     - nodes.csv
     - page_content.csv
-    - assets/NESBp_logo.png
+    - assets/GNSBI_NESBp_combined.png
   type: website
 
 execute:
@@ -13,27 +13,32 @@ execute:
 website:
   title: "NESBp MSP knowledge sharing platform"
   navbar:
-    logo: assets/NESBp_logo.png
+    logo: assets/GNSBI_NESBp_combined.png
     left:
       - text: "Policy Makers"
         href: policy_makers.qmd
       - text: "MSP Experts"
         href: msp_experts.qmd
-      - text: "Sectorial Actors"
-        href: sectorial_actors.qmd
 
   sidebar:
     - title: "Policy Makers"
       style: "docked"
       background: light
+      collapse-level: 1
       contents:
         - text: "Policy Makers"
           href: policy_makers.qmd
         - section: "Knowledge Base for Decisions"
           href: policy_makers_knowledge_base.qmd
           contents:
-            - text: "Nature"
+            - text: "Nature Restoration and Conservation"
               href: policy_makers_nature.qmd
+            - text: "Multi-use"
+              href: policy_makers_multi_use.qmd
+            - text: "Cumulative Impacts Assessment (CIA)"
+              href: policy_makers_cia.qmd
+            - text: "Long-term Perspective of Fisheries"
+              href: policy_makers_fisheries.qmd
             - text: "Case study - North-Western Mediterranean"
               href: policy_makers_case_north-western_mediterranean.qmd
         - section: "MSP Administrative boundaries"
@@ -81,6 +86,7 @@ website:
     - title: "MSP Experts"
       style: "docked"
       background: light
+      collapse-level: 1
       contents:
         - text: "MSP Experts"
           href: msp_experts.qmd
@@ -111,19 +117,6 @@ website:
           href: msp_experts_knowledge_base.qmd
         - text: "MSP Zoning"
           href: msp_experts_msp_zoning.qmd
-
-    - title: "Sectorial Actors"
-      style: "docked"
-      background: light
-      contents:
-        - text: "Sectorial Actors"
-          href: sectorial_actors.qmd
-        - text: "MSP Input Data"
-          href: sectorial_actors_msp_input.qmd
-        - text: "Knowledge Base for Decisions"
-          href: sectorial_actors_knowledge_base.qmd
-        - text: "MSP Zoning"
-          href: sectorial_actors_msp_zoning.qmd
 
 
 format:
