@@ -99,6 +99,37 @@ h1::after {
   line-height: 1.6;
 }
 
+/* Optional content images (from page_content.csv image_src) */
+.content-images-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.content-images-row {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: var(--spacing-unit);
+  justify-content: center;
+  align-items: flex-start;
+  width: max-content;
+  max-width: none;
+  margin: 0 auto;
+  padding-bottom: 0.25rem;
+}
+
+.content-images-row img {
+  width: var(--content-image-width, 600px);
+  max-width: none;
+  height: auto;
+  flex: 0 0 auto;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-primary);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   h1::after {

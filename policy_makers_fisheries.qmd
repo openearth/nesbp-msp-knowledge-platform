@@ -1,5 +1,30 @@
 ---
 title: "Long-term Perspective of Fisheries"
+autogen: true
+format:
+  html:
+    grid:
+      sidebar-width: 250px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
 ---
 
-Content for **Long-term Perspective of Fisheries**.
+Proportional catch weight and fishing effort for fleets from Germany, Denmark, Netherlands, Sweden and Belgium (2018-2022).
+
+```{=html}
+<div class="content-images-scroll" style="--content-image-width:600px;">
+  <div class="content-images-row">
+    <img src="assets/pm-knowledge-fisheries/TreeMap0.05_notSca_Tot_confNA_CWght_aggr_run_DEU.DNK.NLD.SWE.BEL_allYrs18-22_SpecAgg.png" alt="" style="width:600px;height:auto;" />
+    <img src="assets/pm-knowledge-fisheries/TreeMap0.05_notSca_Tot_confNA_FiEff_aggr_run_DEU.DNK.NLD.SWE.BEL_allYrs18-22_GrsAgg.png" alt="" style="width:600px;height:auto;" />
+  </div>
+</div>
+```
+
+::: {layout="[ [1] ]"}
+
+```{=html}
+<iframe style="border:none;" height="800" width="100%" src="https://viewer.openearth.nl/compendium-greater-north-sea-embedded/?folders=KjTZRqc8QQKQdsP6MHInmg&layers=RuPfKLDBR32hx3hqYhyZkw&layerNames=Bottom%20Fishing%20Intensity%20,%20Subsurface%20%28OSPAR,%202020%29"></iframe>
+```
+
+:::

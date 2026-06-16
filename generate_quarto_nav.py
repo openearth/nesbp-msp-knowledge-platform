@@ -47,8 +47,15 @@ CSV: nodes.csv (required)
   'sidebar_as' (landing only): "text" | "section" | "" (auto: section if has children, else text)
 
 CSV: page_content.csv (optional; default filename used if present)
-  Columns (common): id, template, layout, grid_sidebar_width, grid_body_width, grid_margin_width, grid_gutter_width, intro_md
+  Columns (common): id, template, layout, grid_sidebar_width, grid_body_width, grid_margin_width, grid_gutter_width, intro_md, image_src, image_width
+  Optional images (below intro_md, above iframes):
+    image_src: single asset path, JSON array of paths, or pipe-separated paths
+    image_width: CSS width for each image (height scales automatically; default 600px)
+  Note: when adding image_src/image_width, keep two empty CSV fields before iframe1_src on rows
+        that do not use images (,,). Extra trailing columns in the CSV are ignored on read.
   Templates:
+    - content:
+        intro_md and/or image_src only (no iframes)
     - single_iframe:
         accepts iframe1_* keys (or legacy iframe_*): iframe1_src, iframe1_height, iframe1_width, iframe1_style
         default layout: "[ [1] ]"
@@ -78,6 +85,7 @@ Examples:
 import csv
 import os
 import argparse
+import json
 import re
 from collections import defaultdict
 
@@ -366,11 +374,17 @@ def validate_tree(nodes, children):
     else:
         print("\nNo warnings.")
 
+PAGE_CONTENT_FIELDS = (
+    "id", "template", "layout", "grid_sidebar_width", "grid_body_width",
+    "grid_margin_width", "grid_gutter_width", "intro_md", "image_src", "image_width",
+    "iframe1_src", "iframe1_height", "iframe1_width", "iframe1_style",
+    "iframe2_src", "iframe2_height", "iframe2_width", "iframe2_style",
+)
+
 def read_page_content(csv_path):
     """Return dict by node id with content config; ignore if file missing."""
     if not os.path.exists(csv_path):
         return {}
-    # BOM + delimiter tolerant read
     dialect = detect_dialect(csv_path)
     items = {}
     with open(csv_path, "r", encoding="utf-8-sig", newline="") as f:
@@ -380,7 +394,8 @@ def read_page_content(csv_path):
             nid = (row.get("id") or "").strip()
             if not nid:
                 continue
-            items[nid] = row
+            # Keep only known columns so stray/extra CSV columns cannot shift values.
+            items[nid] = {field: row.get(field, "") for field in PAGE_CONTENT_FIELDS if field != "id"}
     return items
 
 def file_has_autogen_flag(path):
@@ -393,26 +408,77 @@ def file_has_autogen_flag(path):
     except Exception:
         return False
 
-def render_single_iframe(cfg, title):
-    # front matter grid (optional)
+def parse_image_src(value):
+    """Parse image_src as a single path, JSON array, or pipe-separated paths."""
+    value = (value or "").strip()
+    if not value:
+        return []
+    if value.startswith("["):
+        try:
+            parsed = json.loads(value)
+            if isinstance(parsed, list):
+                return [str(path).strip() for path in parsed if str(path).strip()]
+        except json.JSONDecodeError:
+            pass
+    if "|" in value:
+        return [path.strip() for path in value.split("|") if path.strip()]
+    return [value]
+
+def build_front_matter(cfg, title):
     grid_lines = []
-    if any(cfg.get(k) for k in ("grid_sidebar_width","grid_body_width","grid_margin_width","grid_gutter_width")):
+    if any(cfg.get(k) for k in ("grid_sidebar_width", "grid_body_width", "grid_margin_width", "grid_gutter_width")):
         grid_lines = [
             "format:",
             "  html:",
             "    grid:",
-            f"      sidebar-width: {cfg.get('grid_sidebar_width','')}".rstrip(),
-            f"      body-width: {cfg.get('grid_body_width','')}".rstrip(),
-            f"      margin-width: {cfg.get('grid_margin_width','')}".rstrip(),
-            f"      gutter-width: {cfg.get('grid_gutter_width','')}".rstrip(),
+            f"      sidebar-width: {cfg.get('grid_sidebar_width', '')}".rstrip(),
+            f"      body-width: {cfg.get('grid_body_width', '')}".rstrip(),
+            f"      margin-width: {cfg.get('grid_margin_width', '')}".rstrip(),
+            f"      gutter-width: {cfg.get('grid_gutter_width', '')}".rstrip(),
         ]
-        grid_lines = [ln for ln in grid_lines if not ln.endswith(': ')]
+        grid_lines = [ln for ln in grid_lines if not ln.endswith(": ")]
     fm = ["---", f'title: "{title}"', "autogen: true"]
     fm += grid_lines
     fm.append("---")
-    fm_text = "\n".join(fm)
+    return "\n".join(fm)
 
+def render_images_block(cfg):
+    """Return markdown/HTML for optional intro images below intro_md."""
+    paths = parse_image_src(cfg.get("image_src"))
+    if not paths:
+        return []
+    width = (cfg.get("image_width") or "600px").strip() or "600px"
+    img_tags = "\n".join(
+        f'    <img src="{path}" alt="" style="width:{width};height:auto;" />'
+        for path in paths
+    )
+    return [
+        "```{=html}",
+        f'<div class="content-images-scroll" style="--content-image-width:{width};">',
+        '  <div class="content-images-row">',
+        img_tags,
+        "  </div>",
+        "</div>",
+        "```",
+        "",
+    ]
+
+def render_intro_and_images(cfg):
+    body = []
     intro = (cfg.get("intro_md") or "").strip()
+    if intro:
+        body += [intro, ""]
+    body.extend(render_images_block(cfg))
+    return body
+
+def render_content(cfg, title):
+    fm_text = build_front_matter(cfg, title)
+    body = render_intro_and_images(cfg)
+    return fm_text + "\n\n" + "\n".join(body).rstrip() + "\n"
+
+def render_single_iframe(cfg, title):
+    fm_text = build_front_matter(cfg, title)
+
     layout = (cfg.get("layout") or "[ [1] ]").strip()
 
     # Back-compat: support both iframe_* and iframe1_* field names
@@ -421,9 +487,7 @@ def render_single_iframe(cfg, title):
     width = cfg.get("iframe1_width") or cfg.get("iframe_width") or "100%"
     style = cfg.get("iframe1_style") or cfg.get("iframe_style") or "border:none;"
 
-    body = []
-    if intro:
-        body += [intro, ""]
+    body = render_intro_and_images(cfg)
 
     body.append(f'::: {{layout="{layout}"}}')
     body.append("")
@@ -437,25 +501,8 @@ def render_single_iframe(cfg, title):
     return fm_text + "\n\n" + body_text + "\n"
 
 def render_doble_iframe(cfg, title):
-    # front matter grid (optional)
-    grid_lines = []
-    if any(cfg.get(k) for k in ("grid_sidebar_width","grid_body_width","grid_margin_width","grid_gutter_width")):
-        grid_lines = [
-            "format:",
-            "  html:",
-            "    grid:",
-            f"      sidebar-width: {cfg.get('grid_sidebar_width','')}".rstrip(),
-            f"      body-width: {cfg.get('grid_body_width','')}".rstrip(),
-            f"      margin-width: {cfg.get('grid_margin_width','')}".rstrip(),
-            f"      gutter-width: {cfg.get('grid_gutter_width','')}".rstrip(),
-        ]
-        grid_lines = [ln for ln in grid_lines if not ln.endswith(': ')]
-    fm = ["---", f'title: "{title}"', "autogen: true"]
-    fm += grid_lines
-    fm.append("---")
-    fm_text = "\n".join(fm)
+    fm_text = build_front_matter(cfg, title)
 
-    intro = (cfg.get("intro_md") or "").strip()
     layout = (cfg.get("layout") or "[ [1,1] ]").strip()
 
     # First iframe (same fallbacks as single_iframe)
@@ -470,9 +517,7 @@ def render_doble_iframe(cfg, title):
     width2 = cfg.get("iframe2_width") or "100%"
     style2 = cfg.get("iframe2_style") or "border:none;"
 
-    body = []
-    if intro:
-        body += [intro, ""]
+    body = render_intro_and_images(cfg)
 
     body.append(f'::: {{layout="{layout}"}}')
     body.append("")
@@ -557,30 +602,34 @@ def main():
                 continue
 
             content_cfg = content_by_id.get(n["id"])
-            if content_cfg and (content_cfg.get("template") == "single_iframe"):
-                # Control single_iframe page body via CSV
+            template = (content_cfg or {}).get("template", "").strip()
+            if content_cfg and template in ("content", "single_iframe", "doble_iframe"):
                 can_write = (not os.path.exists(fp)) or file_has_autogen_flag(fp)
                 if not can_write:
                     print(f"Skip content write (manual page): {fp}")
                     continue
-                page_text = render_single_iframe(content_cfg, title=n["label"])
+                if template == "content":
+                    page_text = render_content(content_cfg, title=n["label"])
+                elif template == "single_iframe":
+                    page_text = render_single_iframe(content_cfg, title=n["label"])
+                else:
+                    page_text = render_doble_iframe(content_cfg, title=n["label"])
                 make_dirs_for(fp)
                 with open(fp, "w", encoding="utf-8") as f:
                     f.write(page_text)
-                print(f"Wrote content for {fp} (single_iframe)")
+                print(f"Wrote content for {fp} ({template})")
                 continue
-            
-            if content_cfg and (content_cfg.get("template") == "doble_iframe"):
-                # Control doble_iframe page body via CSV
+
+            if content_cfg and parse_image_src(content_cfg.get("image_src")):
                 can_write = (not os.path.exists(fp)) or file_has_autogen_flag(fp)
                 if not can_write:
                     print(f"Skip content write (manual page): {fp}")
                     continue
-                page_text = render_doble_iframe(content_cfg, title=n["label"])
+                page_text = render_content(content_cfg, title=n["label"])
                 make_dirs_for(fp)
                 with open(fp, "w", encoding="utf-8") as f:
                     f.write(page_text)
-                print(f"Wrote content for {fp} (doble_iframe)")
+                print(f"Wrote content for {fp} (content)")
                 continue
 
             # Otherwise fall back to the old 'stub if missing' behavior
