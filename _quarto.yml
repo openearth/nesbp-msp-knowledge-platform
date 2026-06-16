@@ -31,6 +31,8 @@ website:
         - section: "Knowledge Base for Decisions"
           href: policy_makers_knowledge_base.qmd
           contents:
+            - text: "Boundaries and Windfarms"
+              href: boundaries-and-windfarms.qmd
             - text: "Nature Restoration and Conservation"
               href: policy_makers_nature.qmd
             - text: "Multi-use"
