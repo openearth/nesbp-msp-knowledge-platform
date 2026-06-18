@@ -122,9 +122,9 @@ h1::after {
 }
 
 .content-images-row img {
-  width: var(--content-image-width, 600px);
+  height: var(--content-image-height, 500px);
+  width: auto;
   max-width: none;
-  height: auto;
   flex: 0 0 auto;
   border-radius: var(--border-radius);
   border: 1px solid var(--color-primary);

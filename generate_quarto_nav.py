@@ -47,11 +47,11 @@ CSV: nodes.csv (required)
   'sidebar_as' (landing only): "text" | "section" | "" (auto: section if has children, else text)
 
 CSV: page_content.csv (optional; default filename used if present)
-  Columns (common): id, template, layout, grid_sidebar_width, grid_body_width, grid_margin_width, grid_gutter_width, intro_md, image_src, image_width
+  Columns (common): id, template, layout, grid_sidebar_width, grid_body_width, grid_margin_width, grid_gutter_width, intro_md, image_src, image_height
   Optional images (below intro_md, above iframes):
     image_src: single asset path, JSON array of paths, or pipe-separated paths
-    image_width: CSS width for each image (height scales automatically; default 600px)
-  Note: when adding image_src/image_width, keep two empty CSV fields before iframe1_src on rows
+    image_height: CSS height for each image (width scales automatically; default 500px)
+  Note: when adding image_src/image_height, keep two empty CSV fields before iframe1_src on rows
         that do not use images (,,). Extra trailing columns in the CSV are ignored on read.
   Templates:
     - content:
@@ -376,7 +376,7 @@ def validate_tree(nodes, children):
 
 PAGE_CONTENT_FIELDS = (
     "id", "template", "layout", "grid_sidebar_width", "grid_body_width",
-    "grid_margin_width", "grid_gutter_width", "intro_md", "image_src", "image_width",
+    "grid_margin_width", "grid_gutter_width", "intro_md", "image_src", "image_height",
     "iframe1_src", "iframe1_height", "iframe1_width", "iframe1_style",
     "iframe2_src", "iframe2_height", "iframe2_width", "iframe2_style",
 )
@@ -447,14 +447,14 @@ def render_images_block(cfg):
     paths = parse_image_src(cfg.get("image_src"))
     if not paths:
         return []
-    width = (cfg.get("image_width") or "600px").strip() or "600px"
+    height = (cfg.get("image_height") or cfg.get("image_width") or "500px").strip() or "500px"
     img_tags = "\n".join(
-        f'    <img src="{path}" alt="" style="width:{width};height:auto;" />'
+        f'    <img src="{path}" alt="" style="height:{height};width:auto;" />'
         for path in paths
     )
     return [
         "```{=html}",
-        f'<div class="content-images-scroll" style="--content-image-width:{width};">',
+        f'<div class="content-images-scroll" style="--content-image-height:{height};">',
         '  <div class="content-images-row">',
         img_tags,
         "  </div>",

@@ -1,5 +1,27 @@
 ---
 title: "Multi-use"
+autogen: true
+format:
+  html:
+    grid:
+      sidebar-width: 250px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
 ---
 
-Content for **Multi-use**.
+This map is a first exploration between the collaboration of the GNSBI Knowledge Sharing and Multi-Use working tracks. 
+The map presents multi-use case studies in the North Sea based on the publication **Expert Study on Ocean Multi-use in the German Exclusive Economic Zone (EEZ)
+of the North and Baltic Sea** by s.Pro – sustainable projects GmbH. These locations are pilot projects and not running multi-use operations, the case studies of the study are not included.
+
+Each multi-use activity is represented by one colour in the pie chart. Each colour represents always **two** activities:Offshore Wind Energy and Any other activity (refer to legend).
+
+Disclaimer: This map is a work in progress. Not all multi-use locations listed in the expert study could be mapped due to missing coordinates or information about the location.
+
+```{=html}
+<div class="content-images-scroll" style="--content-image-height:600px;">
+  <div class="content-images-row">
+    <img src="assets/pm-knowledge-multi/map_multiuse_draft.png" alt="" style="height:600px;width:auto;" />
+  </div>
+</div>
+```

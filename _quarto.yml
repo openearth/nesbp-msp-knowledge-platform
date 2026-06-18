@@ -41,8 +41,8 @@ website:
               href: policy_makers_cia.qmd
             - text: "Long-term Perspective of Fisheries"
               href: policy_makers_fisheries.qmd
-            - text: "Case study - North-Western Mediterranean"
-              href: policy_makers_case_north-western_mediterranean.qmd
+            - text: "Shipping"
+              href: policy_makers_case_shipping.qmd
         - section: "MSP Administrative boundaries"
           href: msp-administrative-boundaries.qmd
           contents:

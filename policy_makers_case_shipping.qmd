@@ -1,0 +1,28 @@
+---
+title: "Shipping"
+autogen: true
+format:
+  html:
+    grid:
+      sidebar-width: 250px
+      body-width: 1500px
+      margin-width: 0px
+      gutter-width: 1.5rem
+---
+
+NaviSafe (SHOM) is a **MSP tool** which provides a **macroscopic view on potential maritime traffic risks** with different activities and sea uses. The tool is currently under development.
+
+The risk calculation is vased on a risk matrix per vesel type and activity, which was developed based on expert judgement and literature review.
+
+**Step 1**: Collision Risk calculation was performed per vessel type with the ReMAP NaviSafe Tool. Risk Index output ranges from 0 (low risk) to 4 (high risk).
+
+**Step 2**: Vessel type risk maps were summed to a Cumulative Risk Index to showcase the cumulative collision risk for all vessel types with OWF.
+
+```{=html}
+<div class="content-images-scroll" style="--content-image-height:500px;">
+  <div class="content-images-row">
+    <img src="assets/pm-knowledge-shipping/shipping_routes.png" alt="" style="height:500px;width:auto;" />
+    <img src="assets/pm-knowledge-shipping/all_vessel_through_cargo_algorithm_nolabels.png" alt="" style="height:500px;width:auto;" />
+  </div>
+</div>
+```

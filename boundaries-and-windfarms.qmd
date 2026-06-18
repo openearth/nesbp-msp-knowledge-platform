@@ -10,7 +10,7 @@ format:
       gutter-width: 1.5rem
 ---
 
-GNSBI and NSEC boundaries, with Offsh.ore windfarms planning (NSEC)
+GNSBI and NSEC boundaries, with Offshore windfarms planning (NSEC timelines)
 
 ::: {layout="[ [1] ]"}
 

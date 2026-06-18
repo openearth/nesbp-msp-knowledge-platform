@@ -9,7 +9,7 @@ pm-knowledge-nature,pm-knowledge,Nature Restoration and Conservation,nature-rest
 pm-knowledge-multi,pm-knowledge,Multi-use,multi-use,item,policy_makers_multi_use.qmd,3,,,,,,
 pm-knowledge-cia,pm-knowledge,Cumulative Impacts Assessment (CIA),cumulative-impacts-assessment,item,policy_makers_cia.qmd,4,,,,,,
 pm-knowledge-fisheries,pm-knowledge,Long-term Perspective of Fisheries,long-term-perspective-of-fisheries,item,policy_makers_fisheries.qmd,5,,,,,,
-pm-knowledge-case-mediterranean,pm-knowledge,Case study - North-Western Mediterranean,case-north-western-mediterranean,item,policy_makers_case_north-western_mediterranean.qmd,6,,,,,,
+pm-knowledge-shipping,pm-knowledge,Shipping,shipping,item,policy_makers_case_shipping.qmd,6,,,,,,
 ,,,,,,,,,,,,
 pm-admin,pm,MSP Administrative boundaries,msp-administrative-boundaries,section,msp-administrative-boundaries.qmd,3,,,,,,
 pm-admin-eez,pm-admin,Exclusive Economic Zones,exclusive-economic-zones,item,exclusive-economic-zones.qmd,1,,"v12, world, 2023",,,,
