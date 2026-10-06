@@ -1,0 +1,17 @@
+.git
+.github
+.quarto
+_site
+site_libs
+__pycache__
+*.pyc
+.DS_Store
+Thumbs.db
+*.md
+!README.md
+node_modules
+.cursor
+.vscode
+policy_makers_case_north-western_mediterranean_files
+netlify.toml
+package.json
