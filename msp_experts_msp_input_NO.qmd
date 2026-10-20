@@ -15,7 +15,7 @@ Info on MSP experts MSP input for Norway
 ::: {layout="[ [1,1] ]"}
 
 ```{=html}
-<iframe style="border:none;" height="800" width="100%" src="https://testsysteemrapportage.nl/compendium-greater-north-sea/MSP2030.html#no-msp-2030"></iframe>
+<iframe style="border:none;" height="800" width="100%" src="https://www.openearth.nl/templates-compendium-greater-north-sea/MSP2030.html#no-msp-2030"></iframe>
 ```
 
 ```{=html}

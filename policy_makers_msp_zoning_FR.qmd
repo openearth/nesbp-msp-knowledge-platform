@@ -15,7 +15,7 @@ Info on MSP input for France
 ::: {layout="[ [1] ]"}
 
 ```{=html}
-<iframe style="border:none;" height="800" width="100%" src=""></iframe>
+<iframe style="border:none;" height="800" width="100%" src="https://www.openearth.nl/templates-compendium-greater-north-sea/MSP2030.html#fr-msp-2030"></iframe>
 ```
 
 :::
